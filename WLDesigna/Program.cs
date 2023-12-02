@@ -20,6 +20,9 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+app.MapControllerRoute(name: "default", pattern: "{comtroller=Raiz}/{action=Index}/{id}");
+
 app.MapRazorPages();
+
 
 app.Run();

@@ -1,10 +1,10 @@
 using Newtonsoft.Json; 
-namespace WLDesigna.Pages{ 
+namespace WLDesigna.Models{ 
 
     public class Languages
     {
         [JsonProperty("T")]
-        public required T T { get; set; }
+        public T T { get; set; } = new T();
     }
 
 }

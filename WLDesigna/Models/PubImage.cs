@@ -1,17 +1,17 @@
 using Newtonsoft.Json; 
 using System; 
-namespace WLDesigna.Pages{ 
+namespace WLDesigna.Models{ 
 
     public class PubImage
     {
         [JsonProperty("url")]
-        public required string Url { get; set; }
+        public string Url { get; set; } = string.Empty;
 
         [JsonProperty("modifiedDatetime")]
         public DateTime? ModifiedDatetime { get; set; }
 
         [JsonProperty("checksum")]
-        public required string Checksum { get; set; }
+        public string Checksum { get; set; } = string.Empty;
     }
 
 }

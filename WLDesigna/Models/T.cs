@@ -1,20 +1,20 @@
 using Newtonsoft.Json; 
 using System.Collections.Generic; 
-namespace WLDesigna.Pages{ 
+namespace WLDesigna.Models{ 
 
     public class T
     {
         [JsonProperty("name")]
-        public required string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [JsonProperty("direction")]
-        public required string Direction { get; set; }
+        public string Direction { get; set; } = string.Empty;
 
         [JsonProperty("locale")]
-        public required string Locale { get; set; }
+        public string Locale { get; set; } = string.Empty;
 
         [JsonProperty("script")]
-        public required string Script { get; set; }
+        public string Script { get; set; } = string.Empty;
 
         [JsonProperty("PDF")]
         public List<PDF>? PDF { get; set; }

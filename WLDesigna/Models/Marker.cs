@@ -1,6 +1,6 @@
 using Newtonsoft.Json; 
 using System.Collections.Generic; 
-namespace WLDesigna.Pages{ 
+namespace WLDesigna.Models{ 
 
     public class Marker
     {

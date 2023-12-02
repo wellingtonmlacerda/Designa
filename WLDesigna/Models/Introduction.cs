@@ -1,5 +1,5 @@
 using Newtonsoft.Json; 
-namespace WLDesigna.Pages{ 
+namespace WLDesigna.Models{ 
 
     public class Introduction
     {
