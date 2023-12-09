@@ -1,18 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using WLDesigna.Models;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WLDesigna.Controllers
 {
     public class RaizController : Controller
     {
-        public Raiz _raiz;
-        public RaizController() 
+        // GET: RaizController
+        public ActionResult Index()
         {
-            _raiz = new Raiz();
-        }
-        public IActionResult Index()
-        {
-            return View(_raiz);
+            return View();
         }
     }
 }
