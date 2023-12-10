@@ -1,4 +1,4 @@
-# WLDesigna 
+# Designa 
 [![NPM](https://img.shields.io/npm/l/react)](https://github.com/wellingtonmlacerda/WLDesigna/blob/master/LICENSE.txt)
 
 # Sobre o projeto
@@ -17,10 +17,9 @@ Projeto .Net Core para designar as partes dos irmãos em reuniões das Testeminh
 ## Back end
 Pré-requisitos: .Net 7
 
-```bash
 # clonar repositório
+```bash
 git clone [https://github.com/wellingtonmlacerda/WLDesigna.git]
-
 ```
 
 # Autor
