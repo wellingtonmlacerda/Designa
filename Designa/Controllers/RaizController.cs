@@ -24,16 +24,20 @@ namespace Designa.Controllers
             try
             {
                 _raiz = await GetRoot("202405");
-                if (_raiz?.Files?.T?.RTF?.FirstOrDefault(x => x.Track == 1) is RTF rtf)
+                var _reuniao = new List<Reuniao>();
+                foreach (var rtf in _raiz?.Files?.T?.RTF?.Where(x => x.Mimetype.Equals("application/rtf")))
                 {
                     var url = rtf.File.Url;
                     var stringRTF = await _raiz.GetArquivo(url);
 
                     // Carrega o texto RTF
                     string textoCorrigido = CorrigirCaracteresEspeciais(stringRTF);
-
-                    // Extrair partes enumeradas
-                    List<Parte> partesEnum = ExtrairPartesEnumeradas(textoCorrigido);
+                    _reuniao.Add(new Reuniao()
+                    {
+                        Semana = rtf.Title,
+                        Partes = ExtrairPartesEnumeradas(textoCorrigido)
+                    });
+                    
                 }
             }
             catch (Exception ex)
@@ -48,20 +52,23 @@ namespace Designa.Controllers
             Dictionary<string, string> correcoes = new Dictionary<string, string>
             {
                 { @"\u225?a0", " " },   // Espaços indesejados
-                { @"\u2019", "'" },     // Aspas diretas
+                { @"\u160?", " " },   // Espaços indesejados
+                { @"\u8216?", "'" },     // Aspas diretas
                 { @"\u8212?", "—" },    // Traço longo
-                { @"\u201c", "“" },     // Aspas esquerdas
-                { @"\u201d", "”" },     // Aspas direitas
+                { @"\u8220?", "“" },     // Aspas esquerdas
+                { @"\u8221?", "”" },     // Aspas direitas
                 { @"\u2022", "•" },     // Marcador de lista
-                { @"\u00e1", "á" },     // Letra 'a' com acento agudo
-                { @"\u00e9", "é" },     // Letra 'e' com acento agudo
+                { @"\u225?", "á" },     // Letra 'a' com acento agudo
+                { @"\u233?", "é" },     // Letra 'e' com acento agudo
+                { @"\u201?", "É" },     // Letra 'E' com acento agudo
                 { @"\u237?", "í" },     // Letra 'i' com acento agudo
                 { @"\u243?", "ó" },     // Letra 'o' com acento agudo
-                { @"\u00fa", "ú" },     // Letra 'u' com acento agudo
+                { @"\u250?", "ú" },     // Letra 'u' com acento agudo
                 { @"\u227?", "ã" },     // Letra 'a' com til
-                { @"\u00f5", "õ" },     // Letra 'o' com til
-                { @"\u00e2", "â" },     // Letra 'a' com acento circunflexo
-                { @"\u00ea", "ê" },     // Letra 'e' com acento circunflexo
+                { @"\u224?", "à" },     // Letra 'a' com til
+                { @"\u245?", "õ" },     // Letra 'o' com til
+                { @"\u226?", "â" },     // Letra 'a' com acento circunflexo
+                { @"\u234?", "ê" },     // Letra 'e' com acento circunflexo
                 { @"\u00f4", "ô" },     // Letra 'o' com acento circunflexo
                 { @"\u231?", "ç" },     // Letra 'o' com acento circunflexo
             };
@@ -76,26 +83,49 @@ namespace Designa.Controllers
             string padraoRtf = @"\\[a-z]+\d*|\\[{}\s]|[\r\n]";
 
             // Substituir o código RTF por uma string vazia
-            texto = Regex.Replace(texto, padraoRtf, "");//.Replace("{", "").Replace("}", "");
+            texto = Regex.Replace(texto, padraoRtf, "");
 
-            return texto;
+            return texto.Replace("{", "").Replace("}", "");
         }
 
         private List<Parte> ExtrairPartesEnumeradas(string texto)
         {
             List<Parte> partesEnum = new List<Parte>();
-
-            // Regex para encontrar padrões como "1. Texto (min)"
-            string padrao = @"(\d+)\.?\.\s(.*?)(?=\s\((\d+)\smin\))";            
-            MatchCollection matches = Regex.Matches(texto, padrao);
+            
+            //string padrao = @"\{\s*(\d+)\.\s([\p{L}\p{Pd}\p{Zs}—]+) \((\d+)\smin\)\s*\}|\{\s*(\d+)\.\s*([\p{L}\p{Pd}\p{Zs}—]+)\s*\}\s*\{\s*\(\s*(\d+)\s*min\s*\)\s*\}";
+            string padrao = string.Format(@"{0}|{1}"
+                                            , @"(\d+)\s*\.\s([\p{L}\p{Pd}\p{Zs}—]+)\?\s*\((\d+)\s*min\)"
+                                            , @"(\d+)\s*\.\s*([\p{L}\p{Pd}\p{Zs}—]+)\s*\(\s*(\d+)\s*min\s*\)"
+                                         );
+            
+            Regex regex = new Regex(padrao);
+            MatchCollection matches = regex.Matches(texto);
 
             foreach (Match match in matches)
             {
+                string numeroTitulo;
+                string titulo;
+                string minutos;
+
+                // Verifica qual padrão foi correspondido
+                if (match.Groups[1].Success)
+                {
+                    numeroTitulo = match.Groups[1].Value;
+                    titulo = match.Groups[2].Value;
+                    minutos = match.Groups[3].Value;
+                }
+                else
+                {
+                    numeroTitulo = match.Groups[4].Value;
+                    titulo = match.Groups[5].Value;
+                    minutos = match.Groups[6].Value;
+                }
+
                 Parte parte = new Parte
                 {
-                    Numero = match.Groups[1].Value,
-                    Titulo = match.Groups[2].Value,
-                    Minutos = match.Groups[3].Value
+                    Numero = numeroTitulo,
+                    Titulo = titulo,
+                    Minutos = minutos
                 };
                 partesEnum.Add(parte);
             }
