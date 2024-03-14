@@ -23,7 +23,7 @@ namespace Designa.Controllers
         {
             try
             {
-                _raiz = await _raiz.GetAsyncRootAtual();
+                _raiz = await _raiz.GetAsyncRoot();
                 if (_raiz.Files.T.RTF is List<RTF> listaRTF) {
                     foreach (var rtf in listaRTF.Where(x => x.Mimetype.Equals("application/rtf")))
                     {

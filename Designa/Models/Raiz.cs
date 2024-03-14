@@ -47,9 +47,15 @@ namespace Designa.Models
         [JsonProperty("files")]
         public Files Files { get; set; } = new Files();
 
-        public async Task<Raiz> GetAsyncRootAtual()
+        /// <summary>
+        /// Retorna uma sentinela.
+        /// Use 0 para o período atual, 1 para o próximo, 2 para o seguinte e etc.
+        /// </summary>
+        /// <param name="periodoPub">Período da publicação</param>
+        /// <returns>Retorna uma sentinela</returns>
+        public async Task<Raiz> GetAsyncRoot(int periodoPub = 0)
         {
-            string issui = "202403";
+            string issui = RetonaPubEmissao(periodoPub);
             var client = new HttpClient();
             var request = new HttpRequestMessage(HttpMethod.Get, $"https://b.jw-cdn.org/apis/pub-media/GETPUBMEDIALINKS?pub=mwb&langwritten=T&txtCMSLang=T&issue={issui}");
             var response = await client.SendAsync(request);
@@ -58,6 +64,32 @@ namespace Designa.Models
             var objeto = JsonConvert.DeserializeObject<Raiz>(stringResponse);
 
             return (objeto ?? new Raiz());
+        }
+        /// <summary>
+        /// Retorna o período da sentinela no formato para a requisição.
+        /// Use 0 para o período atual, 1 para o próximo, 2 para o seguinte e etc.
+        /// </summary>
+        /// <param name="pegarPeriodo">Período da publicação</param>
+        /// <returns>Retorna o período de emissão da publicação</returns>
+        private string RetonaPubEmissao(int pegarPeriodo = 0)
+        {
+            // Obtém a data atual
+            // Obtém a data atual
+            DateTime dataAtual = DateTime.Now;
+
+            // Calcula o número de meses a ser adicionado com base no valor fornecido
+            int mesesParaAdicionar = Math.Abs(pegarPeriodo) * 2;
+
+            // Define o sinal de adição ou subtração com base no valor
+            int sinal = Math.Sign(pegarPeriodo);
+
+            // Calcula a data do período
+            DateTime dataPeriodo = dataAtual.AddMonths(sinal * mesesParaAdicionar);
+
+            // Formata o resultado no formato "ano+mes"
+            string resultado = $"{dataPeriodo.Year}{dataPeriodo.Month:D2}";
+
+            return resultado;
         }
         public async Task<string> GetArquivo(string url)
         {
