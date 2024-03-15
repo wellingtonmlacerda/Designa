@@ -48,11 +48,11 @@ namespace Designa.Models
         public Files Files { get; set; } = new Files();
 
         /// <summary>
-        /// Retorna uma sentinela.
+        /// Retorna uma publicação Nossa Vida e Ministério Cristão.
         /// Use 0 para o período atual, 1 para o próximo, 2 para o seguinte e etc.
         /// </summary>
         /// <param name="periodoPub">Período da publicação</param>
-        /// <returns>Retorna uma sentinela</returns>
+        /// <returns>Retorna uma publicação Nossa Vida e Ministério Cristão</returns>
         public async Task<Raiz> GetAsyncRoot(int periodoPub = 0)
         {
             string issui = RetonaPubEmissao(periodoPub);
@@ -66,12 +66,28 @@ namespace Designa.Models
             return (objeto ?? new Raiz());
         }
         /// <summary>
-        /// Retorna o período da sentinela no formato para a requisição.
+        /// Retorna uma publicação Nossa Vida e Ministério Cristão.
+        /// </summary>
+        /// <param name="periodoPub">Período da publicação</param>
+        /// <returns>Retorna uma publicação Nossa Vida e Ministério Cristão</returns>
+        public async Task<Raiz> GetAsyncRoot(string periodoPub)
+        {
+            var client = new HttpClient();
+            var request = new HttpRequestMessage(HttpMethod.Get, $"https://b.jw-cdn.org/apis/pub-media/GETPUBMEDIALINKS?pub=mwb&langwritten=T&txtCMSLang=T&issue={periodoPub}");
+            var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            string stringResponse = await response.Content.ReadAsStringAsync();
+            var objeto = JsonConvert.DeserializeObject<Raiz>(stringResponse);
+
+            return (objeto ?? new Raiz());
+        }
+        /// <summary>
+        /// Retorna o período da Nossa Vida e Ministério Cristão no formato para a requisição.
         /// Use 0 para o período atual, 1 para o próximo, 2 para o seguinte e etc.
         /// </summary>
         /// <param name="pegarPeriodo">Período da publicação</param>
         /// <returns>Retorna o período de emissão da publicação</returns>
-        private string RetonaPubEmissao(int pegarPeriodo = 0)
+        public string RetonaPubEmissao(int pegarPeriodo = 0)
         {
             // Obtém a data atual
             // Obtém a data atual

@@ -1,80 +1,19 @@
-﻿@model Designa.Models.Raiz
+﻿@model IEnumerable<Designa.Models.Raiz>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.PubName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ParentPubName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Booknum)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Pub)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Issue)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FormattedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Track)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Specialty)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@* @foreach (var item in Model) { *@
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => Model.PubName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => Model.ParentPubName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => Model.Booknum)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => Model.Pub)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => Model.Issue)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => Model.FormattedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => Model.Track)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => Model.Specialty)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => Model.Specialty)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-@* } *@
-    </tbody>
-</table>
+<h1>Nossa Vida e Ministério Cristão</h1>
+<div class="card-group">
+@foreach (var item in Model) {
+     <div class="card m-2">
+         <a href="Reuniao?issui=@item.Issue">
+            <img src="@item.PubImage.Url" class="img-fluid rounded-start" alt="@item.PubName">
+         </a>
+        <div class="card-body">
+            <h5 class="card-title">@item.PubName</h5>
+        </div>
+    </div>
+}
+</div>
