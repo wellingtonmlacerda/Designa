@@ -6,27 +6,27 @@ namespace Designa.Controllers
 {
     public class ReuniaoController : Controller
     {
-        public Raiz _raiz;
+        public Publicacao _publicacao;
         public List<Reuniao> _reuniao;
         public ReuniaoController()
         {
-            _raiz = new Raiz();
+            _publicacao = new Publicacao();
             _reuniao = new List<Reuniao>();
         }
         // GET: Reuniao
         public async Task<ActionResult> Index(int issui)
         {
             var _issui = issui.ToString();
-            _raiz = await _raiz.GetAsyncRoot(_issui);
-            if (_raiz.Files.T.RTF is List<RTF> listaRTF)
+            _publicacao = await _publicacao.GetAsyncRoot(_issui);
+            if (_publicacao.Files.T.RTF is List<RTF> listaRTF)
             {
                 foreach (var rtf in listaRTF.Where(x => x.Mimetype.Equals("application/rtf")))
                 {
                     var url = rtf.File.Url;
-                    var stringRTF = await _raiz.GetArquivo(url);
+                    var stringRTF = await _publicacao.GetArquivo(url);
 
                     // Carrega o texto RTF
-                    string textoCorrigido = _raiz.CorrigirCaracteresEspeciaisRTF(stringRTF);
+                    string textoCorrigido = _publicacao.CorrigirCaracteresEspeciaisRTF(stringRTF);
                     _reuniao.Add(new Reuniao(textoCorrigido)
                     {
                         Semana = rtf.Title

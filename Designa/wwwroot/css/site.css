@@ -20,3 +20,13 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.txt-color-teal {
+    color: #86bfca;
+}
+.txt-color-gold {
+    color: #ffcd5c;
+}
+.txt-color-maroon {
+    color: #d27674;
+}

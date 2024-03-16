@@ -1,35 +1,33 @@
 ﻿@model IEnumerable<Designa.Models.Reuniao>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Reuniões";
 }
 
-<h1>Index</h1>
+<h1>Reuniões</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Semana)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
 @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Semana)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
+        <div class="container mt-8">
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <h1>Semana</h1>
+                <p>@Html.DisplayFor(modelItem => item.Semana)</p>
+
+                <div class="card">
+                    @* <div class="card-header bg-primary text-white">
+                        <h2>Programação da Reunião de Meio da Semana</h2>
+                    </div> *@
+                    <div class="card-body">
+                        @foreach (var parte in item.Partes)
+                        {
+                            <h4 class="@(int.Parse(parte.Numero) <= 3 ? "txt-color-teal" : "txt-color-gold")">
+                                @Html.DisplayFor(modelitem => parte.Numero). @Html.DisplayFor(modelitem => parte.Titulo)
+                            </h4>
+                            <p>...</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
-    </tbody>
-</table>
