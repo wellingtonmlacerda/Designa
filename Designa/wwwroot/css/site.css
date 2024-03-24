@@ -51,3 +51,6 @@ html[data-bs-theme="dark"] {
     --cor-fonte-gold: var(--txt-color-gold-escuro);
     --cor-fonte-maroon: var(--txt-color-maroon-escuro);
 }
+.card{
+    padding: 10px 10px 10px 10px;
+}

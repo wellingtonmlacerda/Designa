@@ -2,34 +2,44 @@
 
 @{
     ViewData["Title"] = "Reuniões";
+    int cont = 1;
 }
 
 <h1>Reuniões</h1>
 
-@foreach (var item in Model) {
-        <div class="container mt-8">
+@foreach (var item in Model)
+{
+    <div class="container mt-8">
         <div class="row">
             <div class="col-md-10 offset-md-1">
                 <h1>Semana</h1>
-                <p>@Html.DisplayFor(modelItem => item.Semana)</p>
 
                 <div class="card">
-                    @* <div class="card-header bg-primary text-white">
-                        <h2>Programação da Reunião de Meio da Semana</h2>
-                    </div> *@
+                    <div class="card-header bg-primary text-white">
+                        <p>@Html.DisplayFor(modelItem => item.Semana)</p>
+                        @* <h2>Programação da Reunião de Meio da Semana</h2> *@
+                    </div>
                     <div class="card-body">
-                        @if(item.Partes.Count() != 0)
+                        @{
+                            cont = 1;
+                        }
+                        @foreach (var parte in item.Partes)
                         {
-                            @foreach (var parte in item.Partes)
-                            {
-                                <h4 class="@(item.Partes.FirstOrDefault(x => x.Titulo.Equals("Faça seu melhor no ministério")).Index > parte.Index ? "txt-color-teal" :
-                                           (item.Partes.FirstOrDefault(x => x.Titulo.Equals("Nossa vida cristã")).Index > parte.Index ? "txt-color-gold" : "txt-color-maroon"))">
-                                    @(parte.Numero != 0 ? $"{parte.Numero}." : "")
-                                    @Html.DisplayFor(modelitem => parte.Titulo)
-                                    @(parte.Numero != 0 ? $"({parte.Minutos} min)" : "")
-                                </h4>
-                                <p>...</p>
-                            }
+                            <h4 class="@(cont <= 2 ? "txt-color-teal" : cont <= 3  ? "txt-color-gold" : "txt-color-maroon")">
+                                @(parte.Numero != 0 ? $"{parte.Numero}." : "")
+                                @Html.DisplayFor(modelitem => parte.Titulo)
+                                @(parte.Numero != 0 ? $"({parte.Minutos} min)" : "")
+                            </h4>
+                            <div class="row">
+                                <div class="col-6">
+                                    <input type="text" class="form-control" id="txtPublicador" placeholder="Nome publicador">
+                                </div>
+                                <div class="col-6">
+                                    <input type="text" class="form-control" id="txtAjudante" placeholder="Nome ajudante">
+                                </div>
+                            </div>
+                            if (parte.Numero == 0)
+                                cont++;
                         }
                     </div>
                 </div>
