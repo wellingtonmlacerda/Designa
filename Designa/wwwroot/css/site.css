@@ -22,11 +22,32 @@ body {
 }
 
 .txt-color-teal {
-    color: #86bfca;
+    color: var(--cor-fonte-teal);
 }
 .txt-color-gold {
-    color: #ffcd5c;
+    color: var(--cor-fonte-gold);
 }
 .txt-color-maroon {
-    color: #d27674;
+    color: var(--cor-fonte-maroon);
+}
+
+:root {
+    --txt-color-teal-claro: #2a6b77;
+    --txt-color-teal-escuro: #86bfca;
+    --txt-color-gold-claro: #9b6d17;
+    --txt-color-gold-escuro: #ffcd5c;
+    --txt-color-maroon-claro: #942926;
+    --txt-color-maroon-escuro: #d27674;
+}
+
+html[data-bs-theme="light"] {
+    --cor-fonte-teal: var(--txt-color-teal-claro);
+    --cor-fonte-gold: var(--txt-color-gold-claro);
+    --cor-fonte-maroon: var(--txt-color-maroon-claro);
+}
+
+html[data-bs-theme="dark"] {
+    --cor-fonte-teal: var(--txt-color-teal-escuro);
+    --cor-fonte-gold: var(--txt-color-gold-escuro);
+    --cor-fonte-maroon: var(--txt-color-maroon-escuro);
 }

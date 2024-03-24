@@ -24,7 +24,7 @@
                             {
                                 <h4 class="@(item.Partes.FirstOrDefault(x => x.Titulo.Equals("Faça seu melhor no ministério")).Index > parte.Index ? "txt-color-teal" :
                                            (item.Partes.FirstOrDefault(x => x.Titulo.Equals("Nossa vida cristã")).Index > parte.Index ? "txt-color-gold" : "txt-color-maroon"))">
-                                    @Html.DisplayFor(modelitem => parte.Numero). 
+                                    @(parte.Numero != 0 ? $"{parte.Numero}." : "")
                                     @Html.DisplayFor(modelitem => parte.Titulo)
                                     @(parte.Numero != 0 ? $"({parte.Minutos} min)" : "")
                                 </h4>

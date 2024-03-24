@@ -77,3 +77,16 @@
     })
 })()
 
+$(document).ready(function () {
+    // Obtém o caminho da URL da página atual
+    var path = window.location.pathname;
+
+    // Para cada link de navegação, verifica se o caminho da URL corresponde ao href do link
+    $('.nav-item a').each(function () {
+        var href = $(this).attr('href');
+
+        if (path === href) {
+            $(this).addClass('active');
+        }
+    });
+});
