@@ -181,7 +181,8 @@ namespace Designa.Models
             {
                 { @"\u225?a0", " " },   // Espaços indesejados
                 { @"\u160?", " " },   // Espaços indesejados
-                { @"\u8216?", "'" },     // Aspas diretas
+                { @"\u8216?", "‘" },     // Aspas diretas esquerda
+                { @"\u8217?", "’" },     // Aspas diretas direita
                 { @"\u8212?", "—" },    // Traço longo
                 { @"\u8220?", "“" },     // Aspas esquerdas
                 { @"\u8221?", "”" },     // Aspas direitas
@@ -207,7 +208,6 @@ namespace Designa.Models
             }
 
             // Remover códigos RTF
-            //texto = Regex.Replace(texto, @"\\[a-z0-9]{1, 32}", "");
             string padraoRtf = @"\\[a-z]+\d*|\\[{}\s]|[\r\n]";
 
             // Substituir o código RTF por uma string vazia

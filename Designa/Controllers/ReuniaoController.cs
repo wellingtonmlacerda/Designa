@@ -14,10 +14,13 @@ namespace Designa.Controllers
             _reuniao = new List<Reuniao>();
         }
         // GET: Reuniao
-        public async Task<ActionResult> Index(int issui)
+        public async Task<ActionResult> Index(int issui = 0)
         {
-            var _issui = issui.ToString();
-            _publicacao = await _publicacao.GetAsyncRoot(_issui);
+            if (issui != 0)
+                _publicacao = await _publicacao.GetAsyncRoot(issui.ToString());
+            else
+                _publicacao = await _publicacao.GetAsyncRoot(issui);
+
             if (_publicacao.Files.T.RTF is List<RTF> listaRTF)
             {
                 foreach (var rtf in listaRTF.Where(x => x.Mimetype.Equals("application/rtf")))

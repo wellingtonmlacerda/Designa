@@ -18,12 +18,18 @@
                         <h2>Programação da Reunião de Meio da Semana</h2>
                     </div> *@
                     <div class="card-body">
-                        @foreach (var parte in item.Partes)
+                        @if(item.Partes.Count() != 0)
                         {
-                            <h4 class="@(int.Parse(parte.Numero) <= 3 ? "txt-color-teal" : "txt-color-gold")">
-                                @Html.DisplayFor(modelitem => parte.Numero). @Html.DisplayFor(modelitem => parte.Titulo)
-                            </h4>
-                            <p>...</p>
+                            @foreach (var parte in item.Partes)
+                            {
+                                <h4 class="@(item.Partes.FirstOrDefault(x => x.Titulo.Equals("Faça seu melhor no ministério")).Index > parte.Index ? "txt-color-teal" :
+                                           (item.Partes.FirstOrDefault(x => x.Titulo.Equals("Nossa vida cristã")).Index > parte.Index ? "txt-color-gold" : "txt-color-maroon"))">
+                                    @Html.DisplayFor(modelitem => parte.Numero). 
+                                    @Html.DisplayFor(modelitem => parte.Titulo)
+                                    @(parte.Numero != 0 ? $"({parte.Minutos} min)" : "")
+                                </h4>
+                                <p>...</p>
+                            }
                         }
                     </div>
                 </div>
