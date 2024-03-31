@@ -10,7 +10,7 @@ namespace Designa.Models
         public int Id { get; set; }
         public string Issue { get; set; } = string.Empty;
         public string Semana { get; set; } = string.Empty;
-        public List<Parte> Partes { get; set; } = new List<Parte>();
+        public ICollection<Parte> Partes { get; set; } = new List<Parte>();
         public Reuniao Inicializa(string stringRTF, string semana, string issui)
         {
             _stringRTF = stringRTF;

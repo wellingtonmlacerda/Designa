@@ -6,5 +6,6 @@
         public string Name { get; set; } = string.Empty;
         public byte Status { get; set; }
         public string Observacao { get; set; } = string.Empty;
+        public ICollection<IrmaoParte> IrmaoPartes { get; set; } = new List<IrmaoParte>();
     }
 }

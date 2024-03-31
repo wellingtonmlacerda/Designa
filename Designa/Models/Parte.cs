@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace Designa.Models
+﻿namespace Designa.Models
 {
     public class Parte
     {
@@ -10,6 +8,8 @@ namespace Designa.Models
         public string Titulo { get; set; } = "";
         public string Minutos { get; set; } = "";
         public string Texto { get; set; } = "";
-
+        public int ReuniaoId { get; set; }
+        public Reuniao Reuniao { get; set; } = new ();
+        public ICollection<IrmaoParte> PartesIrmao { get; set; } = new List<IrmaoParte>();
     }
 }
