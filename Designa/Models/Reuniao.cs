@@ -1,17 +1,24 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.RegularExpressions;
 
 namespace Designa.Models
 {
     public class Reuniao
     {
-        public Reuniao(string stringRTF)
+        [NotMapped]
+        private string _stringRTF = string.Empty;
+        public int Id { get; set; }
+        public string Issue { get; set; } = string.Empty;
+        public string Semana { get; set; } = string.Empty;
+        public List<Parte> Partes { get; set; } = new List<Parte>();
+        public Reuniao Inicializa(string stringRTF, string semana, string issui)
         {
             _stringRTF = stringRTF;
-            ExtrairPartesEnumeradas();
+            Semana = semana;
+            Issue = issui;
+            this.ExtrairPartesEnumeradas();
+            return this;
         }
-        private string _stringRTF;
-        public string Semana { get; set; } = "";
-        public List<Parte> Partes { get; set; } = new List<Parte>();
         private void ExtrairPartesEnumeradas()
         {
             string padrao = string.Format(@"{0}|{1}|{2}|{3}|{4}"

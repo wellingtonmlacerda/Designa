@@ -54,3 +54,30 @@ html[data-bs-theme="dark"] {
 .card{
     padding: 10px 10px 10px 10px;
 }
+.icon-ovelha {
+    background-image: url(../img/ovelha.png);
+    background-color: #bf2f13;
+    background-size: cover;
+    width: 32px;
+    height: 32px;
+    border-radius: 5%;
+    transform: scaleX(-1);
+    background-position: center;
+    padding: 4px;
+    display:inline-block;
+
+}
+
+.icon-cevada {
+    background-image: url(../img/cevada.png);
+    background-color: #d68f00;
+    background-size: contain;
+    width: 35px;
+    height: 40px;
+    border-radius: 5%;
+    transform: scaleX(-1);
+}
+.icone-gema {
+    background-size: contain; 
+    background-color: #2a6b77;
+}

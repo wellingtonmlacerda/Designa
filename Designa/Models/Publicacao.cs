@@ -6,11 +6,8 @@ using System.Text.RegularExpressions;
 namespace Designa.Models
 {
     [JsonObject("root")]
-    public class Publicacao
+    public class Publicacao : IPublicacao
     {
-        public Publicacao()
-        {
-        }
         [JsonProperty("pubName")]
         public string PubName { get; set; } = string.Empty;
 
@@ -62,25 +59,9 @@ namespace Designa.Models
         /// <returns>Retorna uma publicação Nossa Vida e Ministério Cristão</returns>
         public async Task<Publicacao> GetAsyncRoot(int periodoPub = 0)
         {
-            string issui = RetonaPubEmissao(periodoPub);
+            var issui = RetonaPubEmissao(periodoPub);
             var client = new HttpClient();
             var request = new HttpRequestMessage(HttpMethod.Get, $"https://b.jw-cdn.org/apis/pub-media/GETPUBMEDIALINKS?pub=mwb&langwritten=T&txtCMSLang=T&issue={issui}");
-            var response = await client.SendAsync(request);
-            response.EnsureSuccessStatusCode();
-            string stringResponse = await response.Content.ReadAsStringAsync();
-            var objeto = JsonConvert.DeserializeObject<Publicacao>(stringResponse);
-
-            return (objeto ?? new Publicacao());
-        }
-        /// <summary>
-        /// Retorna uma publicação Nossa Vida e Ministério Cristão.
-        /// </summary>
-        /// <param name="periodoPub">Período da publicação</param>
-        /// <returns>Retorna uma publicação Nossa Vida e Ministério Cristão</returns>
-        public async Task<Publicacao> GetAsyncRoot(string periodoPub)
-        {
-            var client = new HttpClient();
-            var request = new HttpRequestMessage(HttpMethod.Get, $"https://b.jw-cdn.org/apis/pub-media/GETPUBMEDIALINKS?pub=mwb&langwritten=T&txtCMSLang=T&issue={periodoPub}");
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             string stringResponse = await response.Content.ReadAsStringAsync();
@@ -96,6 +77,9 @@ namespace Designa.Models
         /// <returns>Retorna o período de emissão da publicação</returns>
         public string RetonaPubEmissao(int pegarPeriodo = 0)
         {
+            if(pegarPeriodo > 100) //Significa que já está no formato correto e não precisa pegar o período
+                return pegarPeriodo.ToString();
+
             // Obtém a data atual
             // Obtém a data atual
             DateTime dataAtual = DateTime.Now;
@@ -110,7 +94,7 @@ namespace Designa.Models
             DateTime dataPeriodo = dataAtual.AddMonths(sinal * mesesParaAdicionar);
 
             // Formata o resultado no formato "ano+mes"
-            string resultado = $"{dataPeriodo.Year}{dataPeriodo.Month:D2}";
+            var resultado = $"{dataPeriodo.Year}{dataPeriodo.Month:D2}";
 
             return resultado;
         }
@@ -173,7 +157,6 @@ namespace Designa.Models
                 throw new Exception("Erro ao obter o conteúdo RTF da API.", ex);
             }
         }
-
         public string CorrigirCaracteresEspeciaisRTF(string stringRTF)
         {
             // Substituir padrões de caracteres especiais
@@ -215,7 +198,6 @@ namespace Designa.Models
 
             return stringRTF.Replace("{", "").Replace("}", "");
         }
-
         /// <summary>
         /// Converts RTF file to HTML string.
         /// </summary>
@@ -234,6 +216,17 @@ namespace Designa.Models
                 }
             }
             return htmlString;
+        }
+        public List<RTF> RetornaListaRTF()
+        {
+            if (Files.T.RTF is List<RTF> listaRTF)
+                return listaRTF;
+
+            return new List<RTF>();
+        }
+        public Publicacao ThisPublicacao()
+        {
+            return this;
         }
     }
 }
