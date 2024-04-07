@@ -77,10 +77,9 @@ namespace Designa.Models
         /// <returns>Retorna o período de emissão da publicação</returns>
         public string RetonaPubEmissao(int pegarPeriodo = 0)
         {
-            if(pegarPeriodo > 100) //Significa que já está no formato correto e não precisa pegar o período
+            if (pegarPeriodo > 100) // Significa que já está no formato correto e não precisa pegar o período
                 return pegarPeriodo.ToString();
 
-            // Obtém a data atual
             // Obtém a data atual
             DateTime dataAtual = DateTime.Now;
 
@@ -93,11 +92,29 @@ namespace Designa.Models
             // Calcula a data do período
             DateTime dataPeriodo = dataAtual.AddMonths(sinal * mesesParaAdicionar);
 
+            // Corrigir o mês para os valores específicos
+            int[] mesesValidos = { 1, 3, 5, 7, 9, 11 };
+            if (!mesesValidos.Contains(dataPeriodo.Month))
+            {
+                // Procura o próximo mês válido
+                int proximoMesValido = mesesValidos.FirstOrDefault(m => m > dataPeriodo.Month);
+                if (proximoMesValido == 0) // Se não encontrou, o próximo será o primeiro do próximo ano
+                {
+                    proximoMesValido = mesesValidos.First();
+                    dataPeriodo = new DateTime(dataPeriodo.Year + 1, proximoMesValido, 1);
+                }
+                else
+                {
+                    dataPeriodo = new DateTime(dataPeriodo.Year, proximoMesValido, 1);
+                }
+            }
+
             // Formata o resultado no formato "ano+mes"
             var resultado = $"{dataPeriodo.Year}{dataPeriodo.Month:D2}";
 
             return resultado;
         }
+
         public string ObterMesesPorExtenso(string anoMes)
         {
             if (anoMes.Length != 6)
