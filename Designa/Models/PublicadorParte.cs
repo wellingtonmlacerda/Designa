@@ -3,19 +3,19 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Designa.Models
 {
-    public class IrmaoParte
+    public class PublicadorParte
     {
         [Key]
         public int Id { get; set; }
         public DateTime DataCadastro { get; set; } = DateTime.Now;
         public int ParteId { get; set; }
         public int PublicadorId { get; set; }
-        public int? AjudanteId { get; set; }
+        public int? PublicadorAjudanteId { get; set; }
         [ForeignKey("ParteId")]
-        public Parte Parte { get; set; } = new();
+        public virtual Parte Parte { get; set; } = new();
         [ForeignKey("PublicadorId")]
-        public Irmao Publicador { get; set; } = new();
-        [ForeignKey("AjudanteId")]
-        public Irmao Ajudante { get; set; } = new();
+        public virtual Publicador Publicador { get; set; } = new();
+        [ForeignKey("PublicadorAjudanteId")]
+        public virtual Publicador PublicadorAjudante { get; set; } = new();
     }
 }

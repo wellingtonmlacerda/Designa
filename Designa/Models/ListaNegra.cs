@@ -7,12 +7,12 @@ namespace Designa.Models
     {
         [Key]
         public int Id { get; set; }
-        public int IrmaoId { get; set; }
-        public int IrmaoListaNegraId { get; set;}
+        public int PublicadorId { get; set; }
+        public int PublicadorListaNegraId { get; set;}
         public string Observacao { get; set; } = string.Empty;
         [ForeignKey("IrmaoId")]
-        public Irmao Irmao { get; set; } = new();
-        [ForeignKey("IrmaoListaNegraId")]
-        public Irmao IrmaoListaNegra { get; set; } = new();
+        public virtual Publicador Publicador { get; set; } = new();
+        [ForeignKey("PublicadorListaNegraId")]
+        public virtual Publicador PublicadorListaNegra { get; set; } = new();
     }
 }

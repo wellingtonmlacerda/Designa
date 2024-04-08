@@ -2,7 +2,7 @@
 {
     public class Enums
     {
-        public enum StatusIrmao
+        public enum StatusPublicador
         {
             Inativo,
             Ativo,

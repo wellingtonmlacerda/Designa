@@ -1,0 +1,107 @@
+﻿@using Designa.Models
+@model IEnumerable<Designa.Models.Publicador>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<div id="myPartialContainer">
+    @await Html.PartialAsync("_Edit", new Publicador())
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Observacao)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Sexo)
+            </th>
+            <th>
+                É menor de idade
+            </th>
+            @* <th>
+            @Html.DisplayNameFor(model => model.Pai)
+            </th>
+            <th>
+            @Html.DisplayNameFor(model => model.Mae)
+            </th> *@
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr onclick="editar(@item.Id)">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Observacao)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Sexo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EMenorIdade)
+                </td>
+                @*  <td>
+            @Html.DisplayFor(modelItem => item.Pai.Name)
+            </td>
+            <td>
+            @Html.DisplayFor(modelItem => item.Mae.Name)
+            </td> *@
+                <td>
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    function editar(Id) {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Edit")",
+            data: { id: Id },
+            dataType: "text",
+            success: function (data) {
+                $('#myPartialContainer').html(data);
+            },
+            error: function (req, status, error) {
+                console.log(error);
+            }
+        });
+    }
+
+    function Pesquisa() {
+        let pesquisa = $("#txtBusca").val()
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Pesquisa")",
+            data: { Nome: pesquisa },
+            dataType: "text",
+            success: function (data) {
+
+            },
+            error: function (req, status, error) {
+                console.log(error);
+            }
+        });
+    }
+
+    if (!isFinite('@TempData["ErrorMessage"]')) {
+        alert('@TempData["ErrorMessage"]');
+    }
+</script>

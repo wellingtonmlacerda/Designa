@@ -1,4 +1,7 @@
-﻿using Designa.Models;
+﻿using Designa.DAL;
+using Designa.Data;
+using Designa.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Designa.Extensions
 {
@@ -8,6 +11,7 @@ namespace Designa.Extensions
         {
             services.AddScoped<IPublicacao, Publicacao>();
             services.AddScoped<IReuniaoFactory, ReuniaoFactory>();
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             return services;
         }

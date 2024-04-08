@@ -10,6 +10,6 @@
         public string Texto { get; set; } = "";
         public int ReuniaoId { get; set; }
         public Reuniao Reuniao { get; set; } = new ();
-        public ICollection<IrmaoParte> PartesIrmao { get; set; } = new List<IrmaoParte>();
+        public ICollection<PublicadorParte> PartesIrmao { get; set; } = new List<PublicadorParte>();
     }
 }

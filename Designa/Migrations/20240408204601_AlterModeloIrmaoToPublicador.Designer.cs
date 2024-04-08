@@ -3,6 +3,7 @@ using System;
 using Designa.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Designa.Migrations
 {
     [DbContext(typeof(DesignaContext))]
-    partial class DesignaContextModelSnapshot : ModelSnapshot
+    [Migration("20240408204601_AlterModeloIrmaoToPublicador")]
+    partial class AlterModeloIrmaoToPublicador
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.3");
@@ -91,11 +94,12 @@ namespace Designa.Migrations
                     b.Property<int?>("MaeId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Nome")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Observacao")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("PaiId")
@@ -114,7 +118,7 @@ namespace Designa.Migrations
 
                     b.HasIndex("PaiId");
 
-                    b.ToTable("Publicadores");
+                    b.ToTable("Irmaos");
                 });
 
             modelBuilder.Entity("Designa.Models.PublicadorParte", b =>
@@ -143,7 +147,7 @@ namespace Designa.Migrations
 
                     b.HasIndex("PublicadorId");
 
-                    b.ToTable("PublicadorPartes");
+                    b.ToTable("IrmaoPartes");
                 });
 
             modelBuilder.Entity("Designa.Models.Reuniao", b =>

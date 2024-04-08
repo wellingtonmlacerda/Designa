@@ -9,10 +9,10 @@ namespace Designa.Data
         {
         }
 
-        public DbSet<Irmao> Irmaos { get; set; }
+        public DbSet<Publicador> Publicadores { get; set; }
         public DbSet<Reuniao> Reunioes { get; set; }
         public DbSet<Parte> Partes { get; set; }
-        public DbSet<IrmaoParte> IrmaoPartes { get; set; }
+        public DbSet<PublicadorParte> PublicadorPartes { get; set; }
         public DbSet<ListaNegra> ListasNegra { get; set; }
     }
 }
