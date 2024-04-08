@@ -13,7 +13,7 @@ Projeto .Net Core para designar as partes dos irmãos em reuniões das Testeminh
 - Rezor
 
 # Como executar o projeto
-Após baixar aplicação execute o comando a seguir na janela Package Manager Console:
+1 - Execute o comando a seguir na janela Package Manager Console:
 ```bash
 Update-Database
 ```
