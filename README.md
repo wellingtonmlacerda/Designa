@@ -22,7 +22,7 @@ Ou execute o comando a seguir em Developer PowerShell:
 dotnet ef database update
 ```
 ## Back end
-Pré-requisitos: .Net 7
+Pré-requisitos: .Net 8
 
 # clonar repositório
 ```bash
