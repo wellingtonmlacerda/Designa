@@ -8,6 +8,7 @@ Projeto .Net Core para designar as partes dos irmãos em reuniões das Testeminh
 # Tecnologias utilizadas
 ## Back end
 - C#
+- .Net 8
 ## Front end
 - HTML / CSS / JS
 - Rezor
@@ -21,10 +22,7 @@ Ou execute o comando a seguir em Developer PowerShell:
 ```bash
 dotnet ef database update
 ```
-## Back end
-Pré-requisitos: .Net 8
-
-# clonar repositório
+# Clonar repositório
 ```bash
 git clone [https://github.com/wellingtonmlacerda/WLDesigna.git]
 ```
