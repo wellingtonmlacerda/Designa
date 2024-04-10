@@ -1,5 +1,6 @@
 ﻿@using Designa.Models
-@model IEnumerable<Designa.Models.Publicador>
+@using X.PagedList.Mvc.Core;
+@model X.PagedList.IPagedList<Designa.Models.Publicador>
 
 @{
     ViewData["Title"] = "Publicadores";
@@ -16,22 +17,22 @@
         <tr>
             <th>Ação</th>
             <th>
-                @Html.DisplayNameFor(model => model.Nome)
+                @* @Html.DisplayNameFor(model => model.Nome) *@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Status)
+                @*  @Html.DisplayNameFor(model => model.Status) *@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Sexo)
+                @* @Html.DisplayNameFor(model => model.Sexo) *@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EMenorIdade)
+                @* @Html.DisplayNameFor(model => model.EMenorIdade) *@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Pai)
+                @* @Html.DisplayNameFor(model => model.Pai) *@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Mae)
+                @* @Html.DisplayNameFor(model => model.Mae) *@
             </th>
         </tr>
     </thead>
@@ -62,6 +63,18 @@
         }
     </tbody>
 </table>
+@Html.PagedListPager(Model, pagina => Url.Action("Index", new { pagina = pagina }),
+    new PagedListRenderOptions
+    {
+        LinkToFirstPageFormat = "Primera",
+        LinkToPreviousPageFormat = "Anterior",
+        LinkToNextPageFormat = "Próximo",
+        LinkToLastPageFormat = "última",
+        PageClasses = new string[] { "page-link"},
+        UlElementClasses = new[] { "pagination" },
+        LiElementClasses = new [] {"page-item"}
+    }
+)
 
 <script>
     function editar(Id) {

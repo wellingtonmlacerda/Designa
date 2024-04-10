@@ -1,8 +1,8 @@
 ﻿using Designa.DAL;
-using Designa.Helpers;
 using Designa.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using X.PagedList;
 
 namespace Designa.Controllers
 {
@@ -13,11 +13,12 @@ namespace Designa.Controllers
         {
             _publicador = publicador;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? pagina)
         {
+            int numeroPagina = pagina ?? 1;
             await CarregaPaisAsync();
             var publicador = await _publicador.GetAllWithIncludes(p => p.Pai, m => m.Mae);
-            return View(publicador.OrderBy(o => o.Nome));
+            return View(publicador.OrderBy(o => o.Nome).ToPagedList(numeroPagina, 15));
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
