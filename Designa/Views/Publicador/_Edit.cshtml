@@ -1,67 +1,91 @@
-﻿@model Designa.Models.Publicador
+﻿@using static Designa.Helpers.Enums
+@model Designa.Models.Publicador
 
 @{
     ViewData["Title"] = "Edit";
 }
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Nome" class="control-label"></label>
-                <input asp-for="Nome" class="form-control" />
-                <span asp-validation-for="Nome" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Observacao" class="control-label"></label>
-                <input asp-for="Observacao" class="form-control" />
-                <span asp-validation-for="Observacao" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Sexo" class="control-label"></label>
-                <select asp-for="Sexo" class="form-control">
-                    <option value="M">Masculino</option>
-                    <option value="F">Feminino</option>
-                </select>
-                <span asp-validation-for="Sexo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EMenorIdade" class="control-label"></label>
-                <select asp-for="EMenorIdade" class="form-control">
-                    <option value="0">Não</option>
-                    <option value="1">Sim</option>
-                </select>
-                <span asp-validation-for="EMenorIdade" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PaiId" class="control-label"></label>
-                <select asp-for="PaiId" class="form-control" asp-items="@ViewBag.PaiId">
-                    <option value="">Selecione...</option>
-                </select>
-                <span asp-validation-for="PaiId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MaeId" class="control-label"></label>
-                <select asp-for="MaeId" class="form-control" asp-items="@ViewBag.MaeId">
-                    <option value="">Selecione...</option>
-                </select>
-                <span asp-validation-for="MaeId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+<form asp-action="Create">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Id" />
+    <div class="row">
+        <div class="col-lg-8 col-sm-12 mb-2">
+            <label asp-for="Nome" class="control-label"></label>
+            <input asp-for="Nome" class="form-control" placeholder="Nome do publicador" />
+            <span asp-validation-for="Nome" class="text-danger"></span>
+        </div>
+        <div class="col-lg-2 col-sm-2 mb-2">
+            <label asp-for="Status" class="control-label"></label>
+            <select asp-for="Status" class="form-select" asp-items="@Html.GetEnumSelectList<StatusPublicador>()"></select>
+            <span asp-validation-for="Status" class="text-danger"></span>
+        </div>
+        <div class="col-lg-2 col-sm-3 mb-2">
+            <label asp-for="Sexo" class="control-label"></label>
+            <select asp-for="Sexo" class="form-select">
+                <option value="M">Masculino</option>
+                <option value="F">Feminino</option>
+            </select>
+            <span asp-validation-for="Sexo" class="text-danger"></span>
+        </div>
+        <div class="col-lg-2 col-sm-2 mb-2">
+            <label asp-for="EMenorIdade" class="control-label"></label>
+            <select asp-for="EMenorIdade" class="form-select" asp-items="@Html.GetEnumSelectList<EnumBoleano>()"></select>
+            <span asp-validation-for="EMenorIdade" class="text-danger"></span>
+        </div>
+        <div class="col-lg-5 col-sm-5 mb-2">
+            <label asp-for="PaiId" class="control-label"></label>
+            <select asp-for="PaiId" class="form-select" asp-items="@ViewBag.PaiId">
+                <option value="">Selecione...</option>
+            </select>
+            <span asp-validation-for="PaiId" class="text-danger"></span>
+        </div>
+        <div class="col-lg-5 col-sm-5 mb-2">
+            <label asp-for="MaeId" class="control-label"></label>
+            <select asp-for="MaeId" class="form-select" asp-items="@ViewBag.MaeId">
+                <option value="">Selecione...</option>
+            </select>
+            <span asp-validation-for="MaeId" class="text-danger"></span>
+        </div>
+        <div class="col-lg-4 col-sm-7 mb-2">
+            <label asp-for="Observacao" class="control-label"></label>
+            <textarea asp-for="Observacao" class="form-control" rows="4"></textarea>
+            <span asp-validation-for="Observacao" class="text-danger"></span>
+        </div>
     </div>
-</div>
+    <div class="row col-lg-6 col-sm-12 float-start">
+        <div class="float-start">
+            <button type="submit" value="Salvar" class="btn btn-success m-2">
+                <i class="bi bi-floppy2"></i>
+                Salvar
+            </button>
+            <button type="submit" asp-action="Delete" onclick="return confirm('Tem certeza que quer excluir o publicador?')" asp-route-id="@Model.Id" name="btnExcluir" class="btn btn-danger m-2">
+                <i class="bi bi-trash"></i>
+                Deletar
+            </button>
+            <button type="submit" asp-action="Update" asp-route-id="@Model.Id" name="btnAtualizar" class="btn btn-primary m-2">
+                <i class="bi bi-pencil-square"></i>
+                Atualizar
+            </button>
+        </div>
+    </div>
+</form>
+<form asp-action="Pesquisa">
+    <div class="row col-lg-6 col-sm-12">
+        <div class="float-end">
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button type="submit" name="btnPesquisar" class="btn btn-secondary col-lg-4 col-sm-6 m-2">
+                    <i class="bi bi-search"></i>
+                    Pesquisar
+                </button>
+                <input type="search" name="Nome" class="form-control m-2" id="txtBusca" placeholder="Buscar publicador..." value="@ViewBag.Nome">
+            </div>
+        </div>
+    </div>
+</form>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
 

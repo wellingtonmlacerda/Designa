@@ -17,11 +17,6 @@ namespace Designa.DAL
             _context = context;
             _dbSet = _context.Set<TEntity>();
         }
-        public TEntity CreateNew()
-        {
-            var teste = Activator.CreateInstance<TEntity>();
-            return teste;
-        }
         public void Add(TEntity model)
         {
             _dbSet.Add(model);
@@ -95,15 +90,15 @@ namespace Designa.DAL
         {
             return await _dbSet.CountAsync();
         }
-        public void Update(TEntity objModel)
+        public async Task UpdateAsync(TEntity objModel)
         {
             _context.Entry(objModel).State = EntityState.Modified;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
-        public void Remove(TEntity objModel)
+        public async Task RemoveAsync(TEntity objModel)
         {
             _dbSet.Remove(objModel);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         public Task<int> SaveAsync()
         {

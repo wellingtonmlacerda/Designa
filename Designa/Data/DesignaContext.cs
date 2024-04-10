@@ -7,6 +7,8 @@ namespace Designa.Data
     {
         public DesignaContext(DbContextOptions<DesignaContext> options) : base(options)
         {
+            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+            ChangeTracker.AutoDetectChangesEnabled = false;
         }
 
         public DbSet<Publicador> Publicadores { get; set; }

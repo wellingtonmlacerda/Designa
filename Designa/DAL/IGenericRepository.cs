@@ -5,7 +5,6 @@ namespace Designa.DAL
 {
     public interface IGenericRepository<T> where T : class
     {
-        public T CreateNew();
         void Add(T objModel);
         void AddRange(IEnumerable<T> objModel);
         T? GetId(int id);
@@ -20,8 +19,8 @@ namespace Designa.DAL
         Task<IEnumerable<T>> GetAllAsync();
         int Count();
         Task<int> CountAsync();
-        void Update(T objModel);
-        void Remove(T objModel);
+        Task UpdateAsync(T objModel);
+        Task RemoveAsync(T objModel);
         Task<int> SaveAsync();
         void Dispose();
     }

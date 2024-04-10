@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Designa.DAL;
+using Designa.Helpers;
+using Designa.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Designa.Data;
-using Designa.Models;
-using Designa.DAL;
-using SkiaSharp;
 
 namespace Designa.Controllers
 {
@@ -23,12 +17,7 @@ namespace Designa.Controllers
         {
             await CarregaPaisAsync();
             var publicador = await _publicador.GetAllWithIncludes(p => p.Pai, m => m.Mae);
-            return View(publicador);
-        }
-        public async Task<IActionResult> Create()
-        {
-            await CarregaPaisAsync();
-            return View();
+            return View(publicador.OrderBy(o => o.Nome));
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -51,7 +40,7 @@ namespace Designa.Controllers
 
                 if (id != 0)
                 {
-                    if(await _publicador.GetIdWithIncludesAsync(id, p => p.Pai, m => m.Mae) is Publicador publicador)
+                    if (await _publicador.GetIdWithIncludesAsync(id, p => p.Pai, m => m.Mae) is Publicador publicador)
                         return PartialView("_Edit", publicador);
                 }
 
@@ -65,7 +54,7 @@ namespace Designa.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Atualiza([Bind("Id,Name,Status,Observacao,Sexo,EMenorIdade,PaiId,MaeId")] Publicador publicador)
+        public async Task<IActionResult> Update([Bind("Id,Nome,Status,Observacao,Sexo,EMenorIdade,PaiId,MaeId")] Publicador publicador)
         {
             try
             {
@@ -73,7 +62,7 @@ namespace Designa.Controllers
 
                 if (publicador.Id != 0 && ModelState.IsValid)
                 {
-                    _publicador.Update(publicador);
+                    await _publicador.UpdateAsync(publicador);
                     return RedirectToAction(nameof(Index));
                 }
                 return View(publicador);
@@ -92,15 +81,34 @@ namespace Designa.Controllers
             var publicador = await _publicador.GetIdAsync(id);
             if (publicador != null)
             {
-                _publicador.Remove(publicador);
+                await _publicador.RemoveAsync(publicador);
             }
 
             await _publicador.SaveAsync();
             return RedirectToAction(nameof(Index));
         }
+        public async Task<ActionResult> Pesquisa(string Nome)
+        {
+            try
+            {
+                ViewBag.Nome = Nome;
+                var publicador = await _publicador.GetListAsync(x => x.Nome.Contains(Nome));
+                if (publicador.Count() > 0)
+                {
+                    return View("Index", publicador);
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction(nameof(Index));
+            }
+        }
         private async Task CarregaPaisAsync(int id = 0)
         {
-            if(await _publicador.GetListAsync(m => m.Sexo == "F") is IEnumerable<Publicador> publicadoras && publicadoras.Count() > 0)
+            if (await _publicador.GetListAsync(m => m.Sexo == "F") is IEnumerable<Publicador> publicadoras && publicadoras.Count() > 0)
                 ViewData["MaeId"] = new SelectList(publicadoras.Where(x => x.Id != id), "Id", "Nome");
             if (await _publicador.GetListAsync(m => m.Sexo == "M") is IEnumerable<Publicador> publicadores && publicadores.Count() > 0)
                 ViewData["PaiId"] = new SelectList(publicadores.Where(x => x.Id != id), "Id", "Nome");

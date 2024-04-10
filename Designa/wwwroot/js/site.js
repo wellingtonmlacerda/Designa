@@ -77,7 +77,7 @@
     })
 })()
 
-$(document).ready(function () {
+$(function () {
     // Obtém o caminho da URL da página atual
     var path = window.location.pathname;
 

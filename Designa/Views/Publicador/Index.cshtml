@@ -2,17 +2,19 @@
 @model IEnumerable<Designa.Models.Publicador>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Publicadores";
 }
 
-<h1>Index</h1>
-
+<h1>Publicadores</h1>
+<hr />
 <div id="myPartialContainer">
     @await Html.PartialAsync("_Edit", new Publicador())
 </div>
-<table class="table">
+<hr />
+<table class="table table-striped table-hover">
     <thead>
         <tr>
+            <th>Ação</th>
             <th>
                 @Html.DisplayNameFor(model => model.Nome)
             </th>
@@ -20,27 +22,24 @@
                 @Html.DisplayNameFor(model => model.Status)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Observacao)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Sexo)
             </th>
             <th>
-                É menor de idade
-            </th>
-            @* <th>
-            @Html.DisplayNameFor(model => model.Pai)
+                @Html.DisplayNameFor(model => model.EMenorIdade)
             </th>
             <th>
-            @Html.DisplayNameFor(model => model.Mae)
-            </th> *@
-            <th></th>
+                @Html.DisplayNameFor(model => model.Pai)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Mae)
+            </th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
             <tr onclick="editar(@item.Id)">
+                <th><i class="bi bi-pencil-square" title="Editar registro"></i></th>
                 <td>
                     @Html.DisplayFor(modelItem => item.Nome)
                 </td>
@@ -48,27 +47,22 @@
                     @Html.DisplayFor(modelItem => item.Status)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Observacao)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Sexo)
+                    @Html.DisplayFor(modelItem => item.SexoDesc)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.EMenorIdade)
                 </td>
-                @*  <td>
-            @Html.DisplayFor(modelItem => item.Pai.Name)
-            </td>
-            <td>
-            @Html.DisplayFor(modelItem => item.Mae.Name)
-            </td> *@
                 <td>
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    @Html.DisplayFor(modelItem => item.Pai.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Mae.Nome)
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
 <script>
     function editar(Id) {
         $.ajax({

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static Designa.Helpers.Enums;
 
 namespace Designa.Models
 {
@@ -11,11 +12,16 @@ namespace Designa.Models
         [Key]
         public int Id { get; set; }
         public string Nome { get; set; } = string.Empty;
-        public byte Status { get; set; } = 1;
+        public StatusPublicador Status { get; set; } = StatusPublicador.Ativo;
+        [Display(Name = "Observação")]
         public string? Observacao { get; set; } = string.Empty;
         public string Sexo { get; set; } = string.Empty;
-        public byte EMenorIdade { get; set; } = 0;
+        public string SexoDesc { get { return Sexo == "M" ? "Masculino" : "Feminino"; } }
+        [Required, Display(Name = "É Menor?")]
+        public EnumBoleano EMenorIdade { get; set; } = EnumBoleano.Não;
+        [Display(Name = "Pai")]
         public int? PaiId { get; set; }
+        [Display(Name = "Mãe")]
         public int? MaeId { get; set; }
         [ForeignKey("PaiId")]
         public virtual Publicador? Pai { get; set; }
