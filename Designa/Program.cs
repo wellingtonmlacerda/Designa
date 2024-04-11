@@ -12,7 +12,7 @@ builder.Services.AddDbContext<DesignaContext>(options =>
 );
 
 builder.Services.AddDependency();
-
+builder.Services.AddLocalization();
 
 var app = builder.Build();
 
@@ -23,6 +23,9 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+app.UseRequestLocalization(new RequestLocalizationOptions()
+    .AddSupportedCultures(new[] { "en-US", "pt-BR" })
+    .AddSupportedUICultures(new[] { "en-US", "pt-BR" }));
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

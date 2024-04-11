@@ -11,10 +11,13 @@ namespace Designa.Models
     {
         [Key]
         public int Id { get; set; }
+        [MaxLength(100)]
         public string Nome { get; set; } = string.Empty;
         public StatusPublicador Status { get; set; } = StatusPublicador.Ativo;
         [Display(Name = "Observação")]
+        [Column(TypeName = "varchar(8000)")]
         public string? Observacao { get; set; } = string.Empty;
+        [Column(TypeName = "char(1)")]
         public string Sexo { get; set; } = string.Empty;
         public string SexoDesc { get { return Sexo == "M" ? "Masculino" : "Feminino"; } }
         [Required, Display(Name = "É Menor?")]
@@ -27,6 +30,8 @@ namespace Designa.Models
         public virtual Publicador? Pai { get; set; }
         [ForeignKey("MaeId")]
         public virtual Publicador? Mae { get; set; }
+        [Display(Name = "Privilégio")]
+        public Privilegio Privilegio { get; set; } = Privilegio.Publicador;
         [InverseProperty("Publicador")]
         public virtual ICollection<ListaNegra> listaNegraPublicadores { get; set; } = new List<ListaNegra>();
         [InverseProperty("Publicador")]

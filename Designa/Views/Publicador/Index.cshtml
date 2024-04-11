@@ -17,22 +17,25 @@
         <tr>
             <th>Ação</th>
             <th>
-                @* @Html.DisplayNameFor(model => model.Nome) *@
+                @Html.DisplayNameFor(model => model[0].Nome)
             </th>
             <th>
-                @*  @Html.DisplayNameFor(model => model.Status) *@
+                 @Html.DisplayNameFor(model => model[0].Status)
             </th>
             <th>
-                @* @Html.DisplayNameFor(model => model.Sexo) *@
+                @Html.DisplayNameFor(model => model[0].Privilegio)
             </th>
             <th>
-                @* @Html.DisplayNameFor(model => model.EMenorIdade) *@
+                @Html.DisplayNameFor(model => model[0].Sexo)
             </th>
             <th>
-                @* @Html.DisplayNameFor(model => model.Pai) *@
+                @Html.DisplayNameFor(model => model[0].EMenorIdade)
             </th>
             <th>
-                @* @Html.DisplayNameFor(model => model.Mae) *@
+                @Html.DisplayNameFor(model => model[0].Pai)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].Mae)
             </th>
         </tr>
     </thead>
@@ -46,6 +49,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Privilegio)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.SexoDesc)

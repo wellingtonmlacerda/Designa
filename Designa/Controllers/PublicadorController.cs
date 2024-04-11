@@ -9,29 +9,43 @@ namespace Designa.Controllers
     public class PublicadorController : Controller
     {
         private readonly IGenericRepository<Publicador> _publicador;
-        public PublicadorController(IGenericRepository<Publicador> publicador)
+        private readonly IConfiguration _configuracao;
+        private readonly int _itensToPage;
+        public PublicadorController(IGenericRepository<Publicador> publicador, IConfiguration configuracao)
         {
             _publicador = publicador;
+            _configuracao = configuracao;
+            int.TryParse(configuracao["ItensToPage"], out _itensToPage);
+            _itensToPage = _itensToPage == 0 ? 15 : _itensToPage;
         }
         public async Task<IActionResult> Index(int? pagina)
         {
             int numeroPagina = pagina ?? 1;
             await CarregaPaisAsync();
             var publicador = await _publicador.GetAllWithIncludes(p => p.Pai, m => m.Mae);
-            return View(publicador.OrderBy(o => o.Nome).ToPagedList(numeroPagina, 15));
+            return View(publicador.OrderBy(o => o.Nome).ToPagedList(numeroPagina, _itensToPage));
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nome,Status,Observacao,Sexo,EMenorIdade,PaiId,MaeId")] Publicador publicador)
+        public async Task<IActionResult> Create(Publicador publicador)
         {
-            await CarregaPaisAsync();
-
-            if (ModelState.IsValid)
+            try
             {
-                _publicador.Add(publicador);
-                await _publicador.SaveAsync();
+                await CarregaPaisAsync();
+
+                if (ModelState.IsValid)
+                {
+                    _publicador.Add(publicador);
+                    await _publicador.SaveAsync();
+                    TempData["ErrorMessage"] = "Registro salvo com sucesso!";
+                }
+                return RedirectToAction(nameof(Index));
             }
-            return RedirectToAction(nameof(Index));
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction(nameof(Index));
+            }
         }
         public async Task<IActionResult> Edit(int id)
         {
@@ -55,7 +69,7 @@ namespace Designa.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Update([Bind("Id,Nome,Status,Observacao,Sexo,EMenorIdade,PaiId,MaeId")] Publicador publicador)
+        public async Task<IActionResult> Update(Publicador publicador)
         {
             try
             {
@@ -64,6 +78,7 @@ namespace Designa.Controllers
                 if (publicador.Id != 0 && ModelState.IsValid)
                 {
                     await _publicador.UpdateAsync(publicador);
+                    TempData["ErrorMessage"] = "Registro atualizado com sucesso!";
                     return RedirectToAction(nameof(Index));
                 }
                 return View(publicador);
@@ -74,15 +89,16 @@ namespace Designa.Controllers
                 return RedirectToAction(nameof(Index));
             }
         }
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteAsync(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             await CarregaPaisAsync();
             var publicador = await _publicador.GetIdAsync(id);
             if (publicador != null)
             {
                 await _publicador.RemoveAsync(publicador);
+                TempData["ErrorMessage"] = "Registro excluído com sucesso!";
             }
 
             await _publicador.SaveAsync();
@@ -93,10 +109,10 @@ namespace Designa.Controllers
             try
             {
                 ViewBag.Nome = Nome;
-                var publicador = await _publicador.GetListAsync(x => x.Nome.Contains(Nome));
+                var publicador = await _publicador.GetListAsync(x => x.Nome.ToUpper().Contains(Nome.Trim().ToUpper()));
                 if (publicador.Count() > 0)
                 {
-                    return View("Index", publicador);
+                    return View("Index", publicador.OrderBy(o => o.Nome).ToPagedList(1, _itensToPage));
                 }
 
                 return RedirectToAction(nameof(Index));
