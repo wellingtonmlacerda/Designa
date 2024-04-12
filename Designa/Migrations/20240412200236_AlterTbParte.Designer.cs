@@ -3,6 +3,7 @@ using System;
 using Designa.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Designa.Migrations
 {
     [DbContext(typeof(DesignaContext))]
-    partial class DesignaContextModelSnapshot : ModelSnapshot
+    [Migration("20240412200236_AlterTbParte")]
+    partial class AlterTbParte
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.4");
@@ -58,7 +61,7 @@ namespace Designa.Migrations
                     b.Property<int>("Numero")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("PublicadorParteId")
+                    b.Property<int>("PublicadorParteId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("ReuniaoId")
@@ -242,7 +245,8 @@ namespace Designa.Migrations
 
             modelBuilder.Entity("Designa.Models.Parte", b =>
                 {
-                    b.Navigation("PublicadorParte");
+                    b.Navigation("PublicadorParte")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Designa.Models.Publicador", b =>

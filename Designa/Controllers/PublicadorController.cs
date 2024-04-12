@@ -2,6 +2,7 @@
 using Designa.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using X.PagedList;
 
 namespace Designa.Controllers
@@ -22,7 +23,7 @@ namespace Designa.Controllers
         {
             int numeroPagina = pagina ?? 1;
             await CarregaPaisAsync();
-            var publicador = await _publicador.GetAllWithIncludes(p => p.Pai, m => m.Mae);
+            var publicador = await _publicador.GetAllWithIncludes(p => p.Include(x => x.Pai).Include(y => y.Mae));
             return View(publicador.OrderBy(o => o.Nome).ToPagedList(numeroPagina, _itensToPage));
         }
         [HttpPost]
@@ -55,7 +56,7 @@ namespace Designa.Controllers
 
                 if (id != 0)
                 {
-                    if (await _publicador.GetIdWithIncludesAsync(id, p => p.Pai, m => m.Mae) is Publicador publicador)
+                    if (await _publicador.GetIdWithIncludesAsync(id, p => p.Include(x => x.Pai).Include(y => y.Mae)) is Publicador publicador)
                         return PartialView("_Edit", publicador);
                 }
 

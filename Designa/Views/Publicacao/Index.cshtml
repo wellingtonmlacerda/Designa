@@ -8,13 +8,13 @@
 <div class="card-group">
 @foreach (var item in Model) {
         <div class="card" style="width: 18rem;">
-         <a href="Reuniao?issui=@item.Issue">
+         <a href="Reuniao?issue=@item.Issue">
             <img src="@item.PubImage.Url" class="img-fluid rounded-start" alt="@item.PubName">
          </a>
         <div class="card-body">
             <h5 class="card-title">@item.PubName</h5>
             <p class="card-text">@item.PeriodoReferencia</p>
-                <a href="Reuniao?issui=@item.Issue" class="btn btn-primary">Reuniões</a>
+                <a href="Reuniao?issue=@item.Issue" class="btn btn-primary">Reuniões</a>
         </div>
     </div>
 }

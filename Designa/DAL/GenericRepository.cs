@@ -1,9 +1,7 @@
 ﻿using Designa.Data;
-using Designa.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
+using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Designa.DAL
 {
@@ -17,15 +15,18 @@ namespace Designa.DAL
             _context = context;
             _dbSet = _context.Set<TEntity>();
         }
+        public TEntity CreateNew()
+        {
+            var teste = Activator.CreateInstance<TEntity>();
+            return teste;
+        }
         public void Add(TEntity model)
         {
             _dbSet.Add(model);
-            _context.SaveChanges();
         }
         public void AddRange(IEnumerable<TEntity> model)
         {
             _dbSet.AddRange(model);
-            _context.SaveChanges();
         }
         public TEntity? GetId(int id)
         {
@@ -35,25 +36,21 @@ namespace Designa.DAL
         {
             return await _dbSet.FindAsync(id);
         }
-        public async Task<TEntity?> GetIdWithIncludesAsync(int id, params Expression<Func<TEntity, object?>>[] includes)
+        public async Task<TEntity?> GetIdWithIncludesAsync(int id, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object?>> include)
         {
             IQueryable<TEntity> query = _dbSet;
+            if (include != null)
+                query = include(query);
 
-            foreach (var include in includes)
-            {
-                query = query.Include(include);
-            }
-
-            // Encontrar a entidade pelo ID
             return await query.FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
         }
-        public TEntity? Get(Expression<Func<TEntity, bool>> predicate)
+        public TEntity Get(Expression<Func<TEntity, bool>> predicate)
         {
-            return _dbSet.FirstOrDefault(predicate);
+            return _dbSet.FirstOrDefault(predicate) ?? CreateNew();
         }
-        public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate)
+        public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await _dbSet.FirstOrDefaultAsync(predicate);
+            return await _dbSet.FirstOrDefaultAsync(predicate) ?? CreateNew();
         }
         public IEnumerable<TEntity> GetList(Expression<Func<TEntity, bool>> predicate)
         {
@@ -63,14 +60,21 @@ namespace Designa.DAL
         {
             return await Task.Run(() => _dbSet.Where<TEntity>(predicate));
         }
-        public async Task<IEnumerable<TEntity>> GetAllWithIncludes(params Expression<Func<TEntity, object?>>[] includes)
+        public async Task<IEnumerable<TEntity>> GetListWithIncludesAsync(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object?>> include)
+        {
+            IQueryable<TEntity> query = _dbSet;
+            
+            if (include != null)
+                query = include(query);
+
+            return await Task.Run(() => query.Where<TEntity>(predicate));
+        }
+        public async Task<IEnumerable<TEntity>> GetAllWithIncludes(Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object?>> include)
         {
             IQueryable<TEntity> query = _dbSet;
 
-            foreach (var include in includes)
-            {
-                query = query.Include(include);
-            }
+            if (include != null)
+                query = include(query);
 
             return await query.ToListAsync();
         }
@@ -85,6 +89,14 @@ namespace Designa.DAL
         public int Count()
         {
             return _dbSet.Count();
+        }
+        public bool Any(Expression<Func<TEntity, bool>> predicate)
+        {
+            return _dbSet.Any(predicate);
+        }
+        public bool All(Expression<Func<TEntity, bool>> predicate)
+        {
+            return _dbSet.All(predicate);
         }
         public async Task<int> CountAsync()
         {

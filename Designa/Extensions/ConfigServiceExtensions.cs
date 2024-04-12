@@ -11,6 +11,7 @@ namespace Designa.Extensions
         {
             services.AddScoped<IPublicacao, Publicacao>();
             services.AddScoped<IReuniaoFactory, ReuniaoFactory>();
+            services.AddScoped<PublicadorReuniaoViewModel>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             return services;

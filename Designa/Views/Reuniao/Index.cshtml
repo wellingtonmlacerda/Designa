@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Designa.Models.Reuniao>
+﻿@model X.PagedList.IPagedList<Designa.Models.Reuniao>
 
 @{
     ViewData["Title"] = "Reuniões";
@@ -6,63 +6,96 @@
 }
 
 <h1>Reuniões</h1>
-
-@foreach (var item in Model)
-{
-    <div class="container mt-8">
-        <div class="row">
-            <div class="col-md-10 offset-md-1">
-                <h1>Semana</h1>
-
-                <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <p>@Html.DisplayFor(modelItem => item.Semana)</p>
-                        @* <h2>Programação da Reunião de Meio da Semana</h2> *@
-                    </div>
-                    <div class="card-body">
-                        @{
-                            cont = 0; // Reseta o contador
-                        }
-                        @foreach (var parte in item.Partes)
-                        {
-                            if (parte.Numero == 0)
-                                cont++;
-                            <div class="row">
-                                <div class="col-12">
-                                    @if (parte.Numero == 0 && cont == 1)
-                                    {
-                                        <div class="icon-gema float-sm-start me-3 mb-2"></div>
-                                    }
-                                    else if (parte.Numero == 0 && cont == 2)
-                                    {
-                                        <div class="icon-cevada float-sm-start me-3 mb-2"></div>
-                                    }
-                                    else if (parte.Numero == 0 && cont == 3)
-                                    {
-                                        <div class="icon-ovelha float-sm-start me-3 mb-2"></div>
-                                    }
-                                    <h4 class="@(cont == 1 ? "txt-color-teal" : cont == 2  ? "txt-color-gold" : "txt-color-maroon")">
-                                        @(parte.Numero != 0 ? $"{parte.Numero}." : "") 
-                                        @parte.Titulo
-                                        @(parte.Numero != 0 ? $"({parte.Minutos} min)" : "")
-                                    </h4>
-                                </div>
+<form asp-action="Create">
+    <div class="row mb-4">
+        <div class="row col-lg-8 col-sm-6">
+            <h1>Semana</h1>
+        </div>
+        <div class="col-lg-4 col-sm-6 text-end">
+            <button type="submit" value="Salvar" class="btn btn-success m-2">
+                <i class="bi bi-floppy2"></i>
+                Salvar
+            </button>
+            <button type="button" value="Imprimir" class="btn btn-primary m-2">
+                <i class="bi bi-printer"></i>
+                Imprimir
+            </button>
+            <button type="button" value="Imprimir" class="btn btn-warning m-2">
+                <i class="bi bi-shuffle"></i>
+                Sortear
+            </button>
+        </div>
+        @foreach (var item in Model)
+        {
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <p>@Html.DisplayFor(modelItem => item.Semana)</p>
+                </div>
+                <div class="card-body">
+                    @{
+                        cont = 0; // Reseta o contador
+                    }
+                    @foreach (var parte in item.Partes)
+                    {
+                        if (parte.Numero == 0)
+                            cont++;
+                        <div class="row">
+                            <div class="col-12">
+                                @if (parte.Numero == 0 && cont == 1)
+                                {
+                                    <div class="icon-gema float-sm-start me-3 mb-2"></div>
+                                }
+                                else if (parte.Numero == 0 && cont == 2)
+                                {
+                                    <div class="icon-cevada float-sm-start me-3 mb-2"></div>
+                                }
+                                else if (parte.Numero == 0 && cont == 3)
+                                {
+                                    <div class="icon-ovelha float-sm-start me-3 mb-2"></div>
+                                }
+                                <h4 class="@(cont == 1 ? "txt-color-teal" : cont == 2  ? "txt-color-gold" : "txt-color-maroon")">
+                                    @(parte.Numero != 0 ? $"{parte.Numero}." : "")
+                                    @parte.Titulo
+                                    @(parte.Numero != 0 ? $"({parte.Minutos} min)" : "")
+                                </h4>
                             </div>
-                            if (parte.Numero != 0)
-                            {
-                                <div class="row mb-2">
-                                    <div class="col-6">
-                                        <input type="text" class="form-control" id="txtPublicador" autocomplete="off" placeholder="Nome publicador">
-                                    </div>
-                                    <div class="col-6">
-                                        <input type="text" class="form-control" id="txtAjudante" autocomplete="off" placeholder="Nome ajudante">
-                                    </div>
+                        </div>
+                        if (parte.Numero != 0)
+                        {
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    @Html.TextBoxFor(model => parte.PublicadorParte!.Publicador.Nome,
+                                             new { @class = "form-control", disabled = "disabled", name = $"parte.PublicadorParte[0]", placeholder = "Nome do publicador", autocomplete = "off" })
                                 </div>
-                            }
+                                @if (cont == 2)
+                                {
+                                    <div class="col-6">
+                                        @Html.TextBoxFor(model => parte.PublicadorParte!.PublicadorAjudante.Nome, 
+                                                new { @class = "form-control", disabled = "disabled", placeholder = "Nome do ajudante", autocomplete = "off" })
+                                    </div>
+                                }
+                            </div>
                         }
-                    </div>
+                    }
                 </div>
             </div>
-        </div>
+        }
     </div>
-}
+</form>
+@Html.PagedListPager(Model, pagina => Url.Action("Index", new { pagina = pagina, issue = Context.Request.Query["issue"] }),
+                new PagedListRenderOptions
+            {
+                LinkToFirstPageFormat = "Primera",
+                LinkToPreviousPageFormat = "Anterior",
+                LinkToNextPageFormat = "Próximo",
+                LinkToLastPageFormat = "última",
+                PageClasses = new string[] { "page-link" },
+                UlElementClasses = new[] { "pagination" },
+                LiElementClasses = new[] { "page-item" }
+            }
+                )
+<script>
+    if (!isFinite('@TempData["ErrorMessage"]')) {
+        alert('@TempData["ErrorMessage"]');
+    }
+</script>

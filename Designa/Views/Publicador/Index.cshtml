@@ -1,6 +1,4 @@
-﻿@using Designa.Models
-@using X.PagedList.Mvc.Core;
-@model X.PagedList.IPagedList<Designa.Models.Publicador>
+﻿@model X.PagedList.IPagedList<Designa.Models.Publicador>
 
 @{
     ViewData["Title"] = "Publicadores";
@@ -60,10 +58,10 @@
                     @Html.DisplayFor(modelItem => item.EMenorIdade)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Pai.Nome)
+                    @Html.DisplayFor(modelItem => item.Pai!.Nome)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Mae.Nome)
+                    @Html.DisplayFor(modelItem => item.Mae!.Nome)
                 </td>
             </tr>
         }

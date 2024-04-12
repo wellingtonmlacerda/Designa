@@ -1,4 +1,6 @@
-﻿namespace Designa.Models
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Designa.Models
 {
     public class Parte
     {
@@ -9,7 +11,8 @@
         public string Minutos { get; set; } = "";
         public string Texto { get; set; } = "";
         public int ReuniaoId { get; set; }
+        public int? PublicadorParteId { get; set; }
         public Reuniao Reuniao { get; set; } = new ();
-        public ICollection<PublicadorParte> PartesIrmao { get; set; } = new List<PublicadorParte>();
+        public PublicadorParte? PublicadorParte { get; set; }
     }
 }
