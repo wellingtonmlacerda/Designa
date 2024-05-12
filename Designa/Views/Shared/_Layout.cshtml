@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="~/Designa.styles.css" asp-append-version="true" />
 </head>
 <body>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jqueryui/jquery-ui.min.js"></script>
     <header>
         <nav class='navbar navbar-expand border-bottom py-2' data-type='fixednav'>
             <div class='container'>
@@ -64,12 +67,11 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted not-print">
         <div class="container">
             &copy; 2023 - Designa - <a asp-area="" asp-controller="Publicacao" asp-action="Index">Publicação</a>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/js/bootstrap.bundle.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)

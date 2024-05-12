@@ -10,7 +10,16 @@ namespace Designa.Models
         public int Id { get; set; }
         public string Issue { get; set; } = string.Empty;
         public string Semana { get; set; } = string.Empty;
+        public int? PresidenteId { get; set; }
+        public int? PublicadorOracaoId { get; set; }
+        [ForeignKey("PresidenteId")]
+        public Publicador? Presidente { get; set; }
+        [ForeignKey("PublicadorOracaoId")]
+        public Publicador? PublicadorOracao { get; set; }
         public ICollection<Parte> Partes { get; set; } = new List<Parte>();
+        // Lista de publicadores disponíveis
+        [NotMapped]
+        public List<Publicador> Presidentes { get; set; } = new List<Publicador>();
         public Reuniao Inicializa(string stringRTF, string semana, string issui)
         {
             _stringRTF = stringRTF;

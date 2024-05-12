@@ -1,46 +1,72 @@
-﻿@model X.PagedList.IPagedList<Designa.Models.Reuniao>
+﻿@using Designa.Models
+@model X.PagedList.IPagedList<Designa.Models.Reuniao>
 
 @{
     ViewData["Title"] = "Reuniões";
-    int cont = 0;
 }
 
-<h1>Reuniões</h1>
+<h1 class="not-print">Reuniões</h1>
 <form asp-action="Create">
     <div class="row mb-4">
-        <div class="row col-lg-8 col-sm-6">
-            <h1>Semana</h1>
+        <div class="row col-lg-8 col-sm-6 not-print">
+            @* <h1>Semana</h1> *@
         </div>
-        <div class="col-lg-4 col-sm-6 text-end">
+        <div class="col-lg-4 col-sm-6 text-end not-print">
             <button type="submit" value="Salvar" class="btn btn-success m-2">
                 <i class="bi bi-floppy2"></i>
                 Salvar
             </button>
-            <button type="button" value="Imprimir" class="btn btn-primary m-2">
+            <button type="button" value="Imprimir" onclick="imprimirCards()" class="btn btn-primary m-2">
                 <i class="bi bi-printer"></i>
                 Imprimir
             </button>
-            <button type="button" value="Imprimir" class="btn btn-warning m-2">
+            <button type="button" value="Sortear" class="btn btn-warning m-2">
                 <i class="bi bi-shuffle"></i>
                 Sortear
             </button>
         </div>
-        @foreach (var item in Model)
+        @{
+            int contReuniao = 0;
+        }
+        @foreach (var reuniao in Model)
         {
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <p>@Html.DisplayFor(modelItem => item.Semana)</p>
+            <input type="hidden" asp-for="@Model[contReuniao].Semana" />
+            <div class="card mb-4">
+                <div class="card-header bg-header text-white">
+                    <div class="row align-items-center">
+                        <div class="col-7">
+                            <p>@Html.DisplayFor(modelItem => reuniao.Semana)</p>
+                        </div>
+                        <div class="col-auto">
+                            <label for="presidenteNome-@contReuniao" class="form-label">Presidente: </label>
+                        </div>
+                        <div class="col-4">
+                            <input type="hidden" asp-for="@Model[contReuniao].PresidenteId" id="presidenteId-@contReuniao" value="@reuniao.PresidenteId" />
+                            <input type="text" asp-for="@Model[contReuniao].Presidente!.Nome" id="presidenteNome-@contReuniao" class="form-control presidente-autocomplete" />
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body">
                     @{
-                        cont = 0; // Reseta o contador
+                        int cont = 0; // Reseta o contador
+                        int contPartes = 0;
                     }
-                    @foreach (var parte in item.Partes)
+                    @foreach (var parte in reuniao.Partes)
                     {
+                        //campos de carga do objeto parte
+                        <input type="hidden" name="[@contReuniao].Partes[@contPartes].Id" value="@parte.Id" />
+                        <input type="hidden" name="[@contReuniao].Partes[@contPartes].Index" value="@parte.Index" />
+                        <input type="hidden" name="[@contReuniao].Partes[@contPartes].Numero" value="@parte.Numero" />
+                        <input type="hidden" name="[@contReuniao].Partes[@contPartes].Titulo" value="@parte.Titulo" />
+                        <input type="hidden" name="[@contReuniao].Partes[@contPartes].Minutos" value="@parte.Minutos" />
+                        <input type="hidden" name="[@contReuniao].Partes[@contPartes].ReuniaoId" value="@parte.ReuniaoId" />
+                        <input type="hidden" name="[@contReuniao].Partes[@contPartes].PublicadorParteId" value="@parte.PublicadorParteId" />
+
                         if (parte.Numero == 0)
                             cont++;
-                        <div class="row">
-                            <div class="col-12">
+
+                        <div class="row mb-4">
+                            <div class="col-8">
                                 @if (parte.Numero == 0 && cont == 1)
                                 {
                                     <div class="icon-gema float-sm-start me-3 mb-2"></div>
@@ -59,43 +85,146 @@
                                     @(parte.Numero != 0 ? $"({parte.Minutos} min)" : "")
                                 </h4>
                             </div>
-                        </div>
-                        if (parte.Numero != 0)
-                        {
-                            <div class="row mb-2">
-                                <div class="col-6">
-                                    @Html.TextBoxFor(model => parte.PublicadorParte!.Publicador.Nome,
-                                             new { @class = "form-control", disabled = "disabled", name = $"parte.PublicadorParte[0]", placeholder = "Nome do publicador", autocomplete = "off" })
+                            @if (parte.Numero != 0)
+                            {
+                                <div class="col justify-content-end">
+                                    <input type="hidden" name="[@contReuniao].Partes[@contPartes].PublicadorParte.PublicadorId" id="publicadorId_@contReuniao-@contPartes" value="@parte.PublicadorParte?.PublicadorId" />
+                                    <input type="text" asp-for="@parte.PublicadorParte!.Publicador.Nome" id="publicadorNome_@contReuniao-@contPartes" class="form-control buscaPublicador" />
                                 </div>
                                 @if (cont == 2)
                                 {
-                                    <div class="col-6">
-                                        @Html.TextBoxFor(model => parte.PublicadorParte!.PublicadorAjudante.Nome, 
-                                                new { @class = "form-control", disabled = "disabled", placeholder = "Nome do ajudante", autocomplete = "off" })
+                                    <div class="col">
+                                        <input type="hidden" name="[@contReuniao].Partes[@contPartes].PublicadorParte.PublicadorAjudanteId" id="publicadorAjudante_@contReuniao-@contPartes" value="@parte.PublicadorParte?.PublicadorAjudanteId" />
+                                        <input type="text" asp-for="@parte.PublicadorParte!.PublicadorAjudante.Nome" id="publicadorAjudante_@contReuniao-@contPartes" class="form-control buscaPublicador" />
                                     </div>
                                 }
-                            </div>
-                        }
+                            }
+                        </div>
+                        contPartes++;
                     }
+                    <div class="row align-items-center">
+                        <div class="col-1 offset-7">
+                            <label for="presidente.nome-@contReuniao">Oração: </label>
+                        </div>
+                        <div class="col-4 justify-content-end">
+                            <input type="hidden" asp-for="@Model[contReuniao].PublicadorOracaoId" id="publicadorOracaoId-@contReuniao" />
+                            <input type="text" asp-for="@Model[contReuniao].PublicadorOracao!.Nome" id="publicadororacaoNome-@contReuniao" class="form-control publicadorOracao-autocomplete" />
+                        </div>
+                    </div>
                 </div>
             </div>
+            contReuniao++;
         }
     </div>
 </form>
 @Html.PagedListPager(Model, pagina => Url.Action("Index", new { pagina = pagina, issue = Context.Request.Query["issue"] }),
-                new PagedListRenderOptions
-            {
-                LinkToFirstPageFormat = "Primera",
-                LinkToPreviousPageFormat = "Anterior",
-                LinkToNextPageFormat = "Próximo",
-                LinkToLastPageFormat = "última",
-                PageClasses = new string[] { "page-link" },
-                UlElementClasses = new[] { "pagination" },
-                LiElementClasses = new[] { "page-item" }
-            }
-                )
+                                                                                                                    new PagedListRenderOptions
+                                                                                                                {
+                                                                                                                    ContainerDivClasses = new []{"not-print"},
+                                                                                                                    LinkToFirstPageFormat = "Primera",
+                                                                                                                    LinkToPreviousPageFormat = "Anterior",
+                                                                                                                    LinkToNextPageFormat = "Próximo",
+                                                                                                                    LinkToLastPageFormat = "última",
+                                                                                                                    PageClasses = new string[] { "page-link" },
+                                                                                                                    UlElementClasses = new[] { "pagination" },
+                                                                                                                    LiElementClasses = new[] { "page-item" }
+                                                                                                                }
+                                                                                                                    )
 <script>
     if (!isFinite('@TempData["ErrorMessage"]')) {
         alert('@TempData["ErrorMessage"]');
     }
+
+    $(function () {
+        var presidentes = @Html.Raw(Json.Serialize(ViewBag.Presidentes));
+
+        $(".presidente-autocomplete").autocomplete({
+            open: function () {
+                $("ul.ui-menu").width($(this).innerWidth());
+            },
+            source: presidentes.map(function (p) {
+                return p.nome;
+            }), // Usar apenas os nomes dos presidentes como fonte de dados
+            select: function (event, ui) {
+                // Encontrar o presidente selecionado pelo nome
+                var presidenteSelecionado = presidentes.find(function (p) {
+                    return p.nome === ui.item.value;
+                });
+
+                // Obter o índice do elemento
+                var index = $(this).attr('id').split('-')[1];
+
+                var id;
+                var valor;
+
+                id = 'presidenteId-' + index;
+                valor = presidenteSelecionado.id;
+
+                // Adicione o novo campo ao seu contêiner (por exemplo, um formulário)
+                $('#' + id).val(valor);
+            }
+        });
+    });
+
+    $(function () {
+        var publicadorOracao = @Html.Raw(Json.Serialize(ViewBag.PublicadorOracao));
+
+        $(".publicadorOracao-autocomplete").autocomplete({
+            open: function () {
+                $("ul.ui-menu").width($(this).innerWidth());
+            },
+            source: publicadorOracao.map(function (p) { return p.nome; }),
+            select: function (event, ui) {
+                var publicadorOracaoSelecionado = publicadorOracao.find(function (p) {
+                    return p.nome === ui.item.value;
+                });
+
+                // Obter o índice do elemento
+                var index = $(this).attr('id').split('-')[1];
+
+                var id;
+                var valor;
+
+                id = 'publicadorOracaoId-' + index;
+                valor = publicadorOracaoSelecionado.id;
+
+                // Adicione o novo campo ao seu contêiner (por exemplo, um formulário)
+                $('#' + id).val(valor);
+            }
+        });
+    });
+
+    $(function () {
+        var publicadores = @Html.Raw(Json.Serialize(ViewBag.Publicadores));
+
+        $(".buscaPublicador").autocomplete({
+            open: function () {
+                $("ul.ui-menu").width($(this).innerWidth());
+            },
+            source: publicadores.map(function (p) { return p.nome; }),
+            select: function (event, ui) {
+                var publicadorSelecionado = publicadores.find(function (p) {
+                    return p.nome === ui.item.value;
+                });
+
+                // Obter o índice do elemento
+                var indices = $(this).attr('id').split('_')[1];
+                var indexReuniao = indices.split('-')[0];
+                var indexParte = indices.split('-')[1];
+
+                var id;
+                var valor;
+                if ($(this).attr('id').split('_')[0] != 'publicadorAjudante') {
+                    id = 'publicadorId_' + indexReuniao + '-' + indexParte;
+                    valor = publicadorSelecionado.id;
+
+                } else {
+                    id = 'ajudanteId_' + indexReuniao + '-' + indexParte;
+                    valor = publicadorSelecionado.id;
+                }
+                // Adicione o novo campo ao seu contêiner (por exemplo, um formulário)
+                $('#' + id).val(valor)
+            }
+        });
+    });
 </script>

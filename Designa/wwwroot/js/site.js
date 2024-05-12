@@ -90,3 +90,8 @@ $(function () {
         }
     });
 });
+
+function imprimirCards() {
+    // Imprime a página
+    window.print();
+}

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol;
 using X.PagedList;
 using static Designa.Helpers.Enums;
 
@@ -38,13 +39,21 @@ namespace Designa.Controllers
 
             var reunioes = await _reuniao.GetListWithIncludesAsync(x => x.Issue == _publicacao.RetonaPubEmissao(issue),
                                                                    p => p.Include(i => i.Partes).ThenInclude(t => t.PublicadorParte!.Publicador)
-                                                                        .Include(t => t.Partes).ThenInclude(y => y.PublicadorParte!.PublicadorAjudante));
+                                                                        .Include(t => t.Partes).ThenInclude(y => y.PublicadorParte!.PublicadorAjudante)
+                                                                        .Include(pre => pre.Presidente)
+                                                                        .Include(r => r.PublicadorOracao));
 
-            return View(await reunioes.ToPagedListAsync(numeroPagina, 1));
+            var publicadores = _publicador.GetList(x => x.Status == StatusPublicador.Ativo).ToList();
+
+            ViewBag.Presidentes = publicadores.Where(x => x.Sexo.Contains("M") && x.Privilegio == Privilegio.Anciao);
+            ViewBag.PublicadorOracao = publicadores.Where(x => x.Sexo.Contains("M"));
+            ViewBag.Publicadores = publicadores;
+
+            return View(await reunioes.ToPagedListAsync(numeroPagina, 4));
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(List<PublicadorParte> value)
+        public ActionResult Create(List<Reuniao> value)
         {
             try
             {
@@ -85,10 +94,6 @@ namespace Designa.Controllers
             {
                 TempData["ErrorMessage"] = ex.Message;
             }
-        }
-        private async Task CarregaPaisAsync()
-        {
-            ViewBag["Publicadores"] = await _publicador.GetListAsync(x => x.Status == StatusPublicador.Ativo);
         }
     }
 }
