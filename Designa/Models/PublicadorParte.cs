@@ -12,10 +12,10 @@ namespace Designa.Models
         public int PublicadorId { get; set; }
         public int? PublicadorAjudanteId { get; set; }
         [ForeignKey("ParteId")]
-        public virtual Parte Parte { get; set; } = new();
+        public virtual Parte? Parte { get; set; }
         [ForeignKey("PublicadorId")]
-        public virtual Publicador Publicador { get; set; } = new();
+        public virtual Publicador? Publicador { get; set; }
         [ForeignKey("PublicadorAjudanteId")]
-        public virtual Publicador PublicadorAjudante { get; set; } = new();
+        public virtual Publicador? PublicadorAjudante { get; set; }
     }
 }

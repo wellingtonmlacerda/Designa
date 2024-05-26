@@ -19,7 +19,7 @@ namespace Designa.Models
         public ICollection<Parte> Partes { get; set; } = new List<Parte>();
         // Lista de publicadores disponíveis
         [NotMapped]
-        public List<Publicador> Presidentes { get; set; } = new List<Publicador>();
+        public List<Publicador>? Presidentes { get; set; }
         public Reuniao Inicializa(string stringRTF, string semana, string issui)
         {
             _stringRTF = stringRTF;

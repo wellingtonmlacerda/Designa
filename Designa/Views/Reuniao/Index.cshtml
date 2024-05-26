@@ -5,11 +5,10 @@
     ViewData["Title"] = "Reuniões";
 }
 
-<h1 class="not-print">Reuniões</h1>
 <form asp-action="Create">
-    <div class="row mb-4">
+    <div class="row mb-4 mt-4 align-items-center">
         <div class="row col-lg-8 col-sm-6 not-print">
-            @* <h1>Semana</h1> *@
+            <h1 class="display-1">REUNIÕES</h1>
         </div>
         <div class="col-lg-4 col-sm-6 text-end not-print">
             <button type="submit" value="Salvar" class="btn btn-success m-2">
@@ -30,23 +29,27 @@
         }
         @foreach (var reuniao in Model)
         {
-            <input type="hidden" asp-for="@Model[contReuniao].Semana" />
             <div class="card mb-4">
                 <div class="card-header bg-header text-white">
                     <div class="row align-items-center">
-                        <div class="col-7">
-                            <p>@Html.DisplayFor(modelItem => reuniao.Semana)</p>
+                        <div class="col-8">
+                            <a href="#collapse-@contReuniao" data-bs-toggle="collapse" class="btn text-white" role="button" aria-expanded="false">
+                                <input type="hidden" asp-for="@Model[contReuniao].Id" />
+                                <input type="hidden" asp-for="@Model[contReuniao].Issue" />
+                                <input type="hidden" asp-for="@Model[contReuniao].Semana" />
+                                <h3>Semana de @Html.DisplayFor(modelItem => reuniao.Semana)</h3>
+                            </a>
                         </div>
-                        <div class="col-auto">
-                            <label for="presidenteNome-@contReuniao" class="form-label">Presidente: </label>
+                        <div class="col-1">
+                            <label for="presidenteNome-@contReuniao" class="form-label">Presidente:</label>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                             <input type="hidden" asp-for="@Model[contReuniao].PresidenteId" id="presidenteId-@contReuniao" value="@reuniao.PresidenteId" />
-                            <input type="text" asp-for="@Model[contReuniao].Presidente!.Nome" id="presidenteNome-@contReuniao" class="form-control presidente-autocomplete" />
+                            <input type="text" asp-for="@Model[contReuniao].Presidente!.Nome" id="presidenteNome-@contReuniao" class="form-control text-center presidente-autocomplete" />
                         </div>
                     </div>
                 </div>
-                <div class="card-body">
+                <div id="collapse-@contReuniao" class="card-body collapse @(contReuniao==0 ? "show": "")">
                     @{
                         int cont = 0; // Reseta o contador
                         int contPartes = 0;
@@ -65,8 +68,8 @@
                         if (parte.Numero == 0)
                             cont++;
 
-                        <div class="row mb-4">
-                            <div class="col-8">
+                        <div class="row mb-4 justify-content-between">
+                            <div class="col-6 @(parte.Numero == 0 ? "mt-5" : "")">
                                 @if (parte.Numero == 0 && cont == 1)
                                 {
                                     <div class="icon-gema float-sm-start me-3 mb-2"></div>
@@ -87,15 +90,17 @@
                             </div>
                             @if (parte.Numero != 0)
                             {
-                                <div class="col justify-content-end">
+                                <div class="col-3 align-items-end">
+                                    <input type="hidden" name="[@contReuniao].Partes[@contPartes].PublicadorParte.Id" value="@parte.PublicadorParte?.Id" />
+                                    <input type="hidden" name="[@contReuniao].Partes[@contPartes].PublicadorParte.ParteId" value="@parte.PublicadorParte?.ParteId" />
                                     <input type="hidden" name="[@contReuniao].Partes[@contPartes].PublicadorParte.PublicadorId" id="publicadorId_@contReuniao-@contPartes" value="@parte.PublicadorParte?.PublicadorId" />
-                                    <input type="text" asp-for="@parte.PublicadorParte!.Publicador.Nome" id="publicadorNome_@contReuniao-@contPartes" class="form-control buscaPublicador" />
+                                    <input type="text" asp-for="@parte.PublicadorParte!.Publicador!.Nome" id="publicadorNome_@contReuniao-@contPartes" class="form-control text-center buscaPublicador" />
                                 </div>
-                                @if (cont == 2)
+                                @if (cont == 2 || reuniao.Partes.LastOrDefault()?.Numero == parte.Numero)
                                 {
-                                    <div class="col">
+                                    <div class="col-3">
                                         <input type="hidden" name="[@contReuniao].Partes[@contPartes].PublicadorParte.PublicadorAjudanteId" id="publicadorAjudante_@contReuniao-@contPartes" value="@parte.PublicadorParte?.PublicadorAjudanteId" />
-                                        <input type="text" asp-for="@parte.PublicadorParte!.PublicadorAjudante.Nome" id="publicadorAjudante_@contReuniao-@contPartes" class="form-control buscaPublicador" />
+                                        <input type="text" asp-for="@parte.PublicadorParte!.PublicadorAjudante!.Nome" id="publicadorAjudante_@contReuniao-@contPartes" class="form-control text-center buscaPublicador" />
                                     </div>
                                 }
                             }
@@ -103,12 +108,12 @@
                         contPartes++;
                     }
                     <div class="row align-items-center">
-                        <div class="col-1 offset-7">
-                            <label for="presidente.nome-@contReuniao">Oração: </label>
+                        <div class="col-1 offset-8">
+                            <label for="presidente.nome-@contReuniao" class="form-label">Oração: </label>
                         </div>
-                        <div class="col-4 justify-content-end">
+                        <div class="col-3 justify-content-end">
                             <input type="hidden" asp-for="@Model[contReuniao].PublicadorOracaoId" id="publicadorOracaoId-@contReuniao" />
-                            <input type="text" asp-for="@Model[contReuniao].PublicadorOracao!.Nome" id="publicadororacaoNome-@contReuniao" class="form-control publicadorOracao-autocomplete" />
+                            <input type="text" asp-for="@Model[contReuniao].PublicadorOracao!.Nome" id="publicadororacaoNome-@contReuniao" class="form-control text-center publicadorOracao-autocomplete" />
                         </div>
                     </div>
                 </div>
@@ -117,36 +122,25 @@
         }
     </div>
 </form>
-@Html.PagedListPager(Model, pagina => Url.Action("Index", new { pagina = pagina, issue = Context.Request.Query["issue"] }),
-                                                                                                                    new PagedListRenderOptions
-                                                                                                                {
-                                                                                                                    ContainerDivClasses = new []{"not-print"},
-                                                                                                                    LinkToFirstPageFormat = "Primera",
-                                                                                                                    LinkToPreviousPageFormat = "Anterior",
-                                                                                                                    LinkToNextPageFormat = "Próximo",
-                                                                                                                    LinkToLastPageFormat = "última",
-                                                                                                                    PageClasses = new string[] { "page-link" },
-                                                                                                                    UlElementClasses = new[] { "pagination" },
-                                                                                                                    LiElementClasses = new[] { "page-item" }
-                                                                                                                }
-                                                                                                                    )
+
 <script>
     if (!isFinite('@TempData["ErrorMessage"]')) {
         alert('@TempData["ErrorMessage"]');
     }
 
+    @* autocomplete do presidentes *@
     $(function () {
         var presidentes = @Html.Raw(Json.Serialize(ViewBag.Presidentes));
 
         $(".presidente-autocomplete").autocomplete({
             open: function () {
                 $("ul.ui-menu").width($(this).innerWidth());
+                $(".ui-helper-hidden-accessible").hide();
             },
             source: presidentes.map(function (p) {
                 return p.nome;
-            }), // Usar apenas os nomes dos presidentes como fonte de dados
+            }), 
             select: function (event, ui) {
-                // Encontrar o presidente selecionado pelo nome
                 var presidenteSelecionado = presidentes.find(function (p) {
                     return p.nome === ui.item.value;
                 });
@@ -166,12 +160,14 @@
         });
     });
 
+    @* autocomplete da oração *@
     $(function () {
         var publicadorOracao = @Html.Raw(Json.Serialize(ViewBag.PublicadorOracao));
 
         $(".publicadorOracao-autocomplete").autocomplete({
             open: function () {
                 $("ul.ui-menu").width($(this).innerWidth());
+                $(".ui-helper-hidden-accessible").hide();
             },
             source: publicadorOracao.map(function (p) { return p.nome; }),
             select: function (event, ui) {
@@ -194,19 +190,21 @@
         });
     });
 
+    @* autocomplete do publicador *@
     $(function () {
         var publicadores = @Html.Raw(Json.Serialize(ViewBag.Publicadores));
 
         $(".buscaPublicador").autocomplete({
             open: function () {
                 $("ul.ui-menu").width($(this).innerWidth());
+                $(".ui-helper-hidden-accessible").hide();
             },
             source: publicadores.map(function (p) { return p.nome; }),
             select: function (event, ui) {
                 var publicadorSelecionado = publicadores.find(function (p) {
                     return p.nome === ui.item.value;
                 });
-
+                
                 // Obter o índice do elemento
                 var indices = $(this).attr('id').split('_')[1];
                 var indexReuniao = indices.split('-')[0];
@@ -216,12 +214,12 @@
                 var valor;
                 if ($(this).attr('id').split('_')[0] != 'publicadorAjudante') {
                     id = 'publicadorId_' + indexReuniao + '-' + indexParte;
-                    valor = publicadorSelecionado.id;
-
                 } else {
-                    id = 'ajudanteId_' + indexReuniao + '-' + indexParte;
-                    valor = publicadorSelecionado.id;
+                    id = 'publicadorAjudante_' + indexReuniao + '-' + indexParte;
                 }
+                
+                valor = publicadorSelecionado.id;
+
                 // Adicione o novo campo ao seu contêiner (por exemplo, um formulário)
                 $('#' + id).val(valor)
             }

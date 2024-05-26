@@ -17,19 +17,26 @@ namespace Designa.Controllers
         public List<Reuniao> _listaReuniao = new();
         public IReuniaoFactory _reuniaoFactory;
         private readonly IGenericRepository<Reuniao> _reuniao;
+        private readonly IGenericRepository<Parte> _parte;
         private readonly IGenericRepository<Publicador> _publicador;
+        private readonly IGenericRepository<PublicadorParte> _publicadorParte;
         public ReuniaoController
         (
             IGenericRepository<Reuniao> reuniao,
             IPublicacao publicacao,
             IReuniaoFactory reuniaoFactory,
-            IGenericRepository<Publicador> publicador
+            IGenericRepository<Publicador> publicador,
+            IGenericRepository<PublicadorParte> publicadorParte,
+            IGenericRepository<Parte> parte
+
         )
         {
             _publicacao = publicacao;
             _reuniaoFactory = reuniaoFactory;
             _reuniao = reuniao;
             _publicador = publicador;
+            _publicadorParte = publicadorParte;
+            _parte = parte;
         }
         // GET: Reuniao
         public async Task<ActionResult> Index(int issue = 0, int pagina = 0)
@@ -49,14 +56,40 @@ namespace Designa.Controllers
             ViewBag.PublicadorOracao = publicadores.Where(x => x.Sexo.Contains("M"));
             ViewBag.Publicadores = publicadores;
 
-            return View(await reunioes.ToPagedListAsync(numeroPagina, 4));
+            return View(await reunioes.ToPagedListAsync(numeroPagina, reunioes.Count()));
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(List<Reuniao> value)
+        public async Task<ActionResult> Create(List<Reuniao> reuniaos)
         {
             try
             {
+                foreach (var reuniao in reuniaos)
+                {
+                    reuniao.Presidente = _publicador.GetId(reuniao.PresidenteId ?? 0);
+                    reuniao.PublicadorOracao = _publicador.GetId(reuniao.PublicadorOracaoId ?? 0);
+
+                    foreach (var parte in reuniao.Partes.Where(x => x.Numero != 0))
+                    {
+                        if (parte.PublicadorParte is PublicadorParte publicadorParte && publicadorParte.PublicadorId != 0)
+                        {
+                            if (publicadorParte.PublicadorId != 0)
+                            {
+                                if (parte.PublicadorParteId == 0)
+                                {
+                                    publicadorParte.ParteId = parte.Id;
+                                    _publicadorParte.Add(publicadorParte);
+                                    await _publicadorParte.SaveAsync();
+                                }
+                                else
+                                    await _publicadorParte.UpdateAsync(publicadorParte);
+                            }
+                            parte.PublicadorParteId = publicadorParte.Id;
+                            await _parte.UpdateAsync(parte);
+                        }
+                    }
+                    await _reuniao.UpdateAsync(reuniao);
+                }
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

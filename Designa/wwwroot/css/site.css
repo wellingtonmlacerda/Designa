@@ -1,32 +1,39 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
+}
+
+@page {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
 
 .txt-color-teal {
     color: var(--cor-fonte-teal);
 }
+
 .txt-color-gold {
     color: var(--cor-fonte-gold);
 }
+
 .txt-color-maroon {
     color: var(--cor-fonte-maroon);
 }
@@ -51,7 +58,8 @@ html[data-bs-theme="dark"] {
     --cor-fonte-gold: var(--txt-color-gold-escuro);
     --cor-fonte-maroon: var(--txt-color-maroon-escuro);
 }
-.card{
+
+.card {
     padding: 10px 10px 10px 10px;
 }
 
@@ -88,11 +96,12 @@ html[data-bs-theme="dark"] {
     border-radius: 5%;
     background-position: center;
     padding: 5px;
-    display:inline-block;
-
+    display: inline-block;
 }
+
 .bg-header {
     background-color: #4a6da7;
+    border-radius: 5px !important;
 }
 
 .ui-menu-item .ui-menu-icon {
@@ -108,9 +117,10 @@ html[data-bs-theme="dark"] {
     overflow-y: auto; /* Rolagem vertical */
     border-radius: 5px;
 }
-.ui-autocomplete:focus{
-    max-width: 100%;
-}
+
+    .ui-autocomplete:focus {
+        max-width: 100%;
+    }
 
 /* Estilo dos itens do menu de autocomplete */
 .ui-menu-item {
@@ -126,16 +136,46 @@ html[data-bs-theme="dark"] {
 
 @media print {
     @page {
-        margin-top: 1.5cm;
-        margin-right: 1cm;
-        margin-bottom: 2cm;
-        margin-left: 0.5cm;
+        size: A4; /* DIN A4 standard, Europe */
+        margin: 5mm 0 0 0;
     }
+
+    html, body {
+        width: 210mm;
+        height: 282mm;
+        font-size: 12px;
+        margin: 0 .5cm 0 2mm;
+        padding: 0;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .container {
+        display: contents;
+    }
+
+    .form-control {
+        border: 0;
+        overflow: visible;
+        font-weight: bold;
+        background-color: transparent;
+    }
+
+    .bg-header .form-control {
+        color: white !important;
+    }
+
     header, .not-print {
         display: none !important;
     }
 
     .card {
+        border: 0;
+        background-color: transparent;
         page-break-before: always; /* Force a page break before each card */
+    }
+
+    .collapse {
+        display: block !important;
     }
 }

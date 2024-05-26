@@ -92,6 +92,11 @@ $(function () {
 });
 
 function imprimirCards() {
-    // Imprime a página
+    
+    const getStoredTheme = () => localStorage.getItem('theme')
+    document.documentElement.setAttribute('data-bs-theme', 'light')
+
     window.print();
+
+    document.documentElement.setAttribute('data-bs-theme', getStoredTheme())
 }
