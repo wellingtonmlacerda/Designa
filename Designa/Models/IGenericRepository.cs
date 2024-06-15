@@ -1,12 +1,12 @@
-﻿using Designa.Models;
-using Microsoft.EntityFrameworkCore.Query;
+﻿using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
-namespace Designa.DAL
+namespace Designa.Models
 {
     public interface IGenericRepository<T> where T : class
     {
-        T CreateNew();
+        T CreateNewObject();
+        List<T> CreateNewObjectList();
         void Add(T objModel);
         void AddRange(IEnumerable<T> objModel);
         T? GetId(int id);

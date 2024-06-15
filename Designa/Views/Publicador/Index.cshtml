@@ -15,13 +15,16 @@
         <tr>
             <th>Ação</th>
             <th>
+                @Html.DisplayNameFor(model => model[0].Id)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model[0].Nome)
             </th>
             <th>
                  @Html.DisplayNameFor(model => model[0].Status)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].Privilegio)
+                @Html.DisplayNameFor(model => model[0].PublicadorPrivilegios.FirstOrDefault()!.Privilegio)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model[0].Sexo)
@@ -43,13 +46,16 @@
             <tr onclick="editar(@item.Id)">
                 <th><i class="bi bi-pencil-square" title="Editar registro"></i></th>
                 <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.Nome)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Status)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Privilegio)
+                    @Html.DisplayFor(modelItem => item.PublicadorPrivilegios.FirstOrDefault()!.Privilegio)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.SexoDesc)
@@ -79,7 +85,6 @@
         LiElementClasses = new [] {"page-item"}
     }
 )
-
 <script>
     function editar(Id) {
         $.ajax({
@@ -115,4 +120,5 @@
     if (!isFinite('@TempData["ErrorMessage"]')) {
         alert('@TempData["ErrorMessage"]');
     }
+
 </script>

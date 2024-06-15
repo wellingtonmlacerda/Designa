@@ -15,6 +15,7 @@ namespace Designa.Data
         public DbSet<Reuniao> Reunioes { get; set; }
         public DbSet<Parte> Partes { get; set; }
         public DbSet<PublicadorParte> PublicadorPartes { get; set; }
+        public DbSet<PublicadorPrivilegio> PublicadorPrivilegios { get; set; }
         public DbSet<ListaNegra> ListasNegra { get; set; }
     }
 }

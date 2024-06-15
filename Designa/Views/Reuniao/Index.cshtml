@@ -5,7 +5,7 @@
     ViewData["Title"] = "Reuniões";
 }
 
-<form asp-action="Create">
+<form asp-action="Create" method="post">
     <div class="row mb-4 mt-4 align-items-center">
         <div class="row col-lg-8 col-sm-6 not-print">
             <h1 class="display-1">REUNIÕES</h1>
@@ -65,6 +65,9 @@
                         <input type="hidden" name="[@contReuniao].Partes[@contPartes].ReuniaoId" value="@parte.ReuniaoId" />
                         <input type="hidden" name="[@contReuniao].Partes[@contPartes].PublicadorParteId" value="@parte.PublicadorParteId" />
 
+                        @* <input type="hidden" name="[@contReuniao].Partes[@contPartes].PublicadorParte.ParteId" value="@parte.PublicadorParte?.ParteId" />
+                        <input type="hidden" name="[@contReuniao].Partes[@contPartes].PublicadorParte.Id" value="@parte.PublicadorParte?.Id" /> *@
+
                         if (parte.Numero == 0)
                             cont++;
 
@@ -91,16 +94,17 @@
                             @if (parte.Numero != 0)
                             {
                                 <div class="col-3 align-items-end">
-                                    <input type="hidden" name="[@contReuniao].Partes[@contPartes].PublicadorParte.Id" value="@parte.PublicadorParte?.Id" />
-                                    <input type="hidden" name="[@contReuniao].Partes[@contPartes].PublicadorParte.ParteId" value="@parte.PublicadorParte?.ParteId" />
                                     <input type="hidden" name="[@contReuniao].Partes[@contPartes].PublicadorParte.PublicadorId" id="publicadorId_@contReuniao-@contPartes" value="@parte.PublicadorParte?.PublicadorId" />
-                                    <input type="text" asp-for="@parte.PublicadorParte!.Publicador!.Nome" id="publicadorNome_@contReuniao-@contPartes" class="form-control text-center buscaPublicador" />
+                                    <input type="text" value="@parte.PublicadorParte?.Publicador?.Nome" placeholder="Publicador"
+                                        id="publicadorNome_@contReuniao-@contPartes" class="form-control text-center buscaPublicador" />
                                 </div>
                                 @if (cont == 2 || reuniao.Partes.LastOrDefault()?.Numero == parte.Numero)
                                 {
                                     <div class="col-3">
-                                        <input type="hidden" name="[@contReuniao].Partes[@contPartes].PublicadorParte.PublicadorAjudanteId" id="publicadorAjudante_@contReuniao-@contPartes" value="@parte.PublicadorParte?.PublicadorAjudanteId" />
-                                        <input type="text" asp-for="@parte.PublicadorParte!.PublicadorAjudante!.Nome" id="publicadorAjudante_@contReuniao-@contPartes" class="form-control text-center buscaPublicador" />
+                                        <input type="hidden" name="[@contReuniao].Partes[@contPartes].PublicadorParte.PublicadorAjudanteId" 
+                                            id="publicadorAjudante_@contReuniao-@contPartes" value="@parte.PublicadorParte?.PublicadorAjudanteId" />
+                                        <input type="text" value="@parte.PublicadorParte?.PublicadorAjudante?.Nome" placeholder="Ajudante"
+                                            id="publicadorAjudante_@contReuniao-@contPartes" class="form-control text-center buscaPublicador" />
                                     </div>
                                 }
                             }
@@ -190,7 +194,7 @@
         });
     });
 
-    @* autocomplete do publicador *@
+    @* autocomplete do publicador/ajudante *@
     $(function () {
         var publicadores = @Html.Raw(Json.Serialize(ViewBag.Publicadores));
 

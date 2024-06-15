@@ -100,3 +100,4 @@ function imprimirCards() {
 
     document.documentElement.setAttribute('data-bs-theme', getStoredTheme())
 }
+

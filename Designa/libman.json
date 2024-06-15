@@ -30,6 +30,14 @@
       "files": [
         "jquery-ui.min.js"
       ]
+    },
+    {
+      "provider": "cdnjs",
+      "library": "jquery.inputmask@5.0.9",
+      "destination": "wwwroot/lib/jquery.inputmask/",
+      "files": [
+        "jquery.inputmask.min.js"
+      ]
     }
   ]
 }

@@ -7,22 +7,26 @@
 
 <form asp-action="Create">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <input type="hidden" asp-for="Id" />
     <div class="row">
+        <div class="col-lg-1 col-sm-1 mb-2">
+            <label asp-for="Id" class="control-label"></label>
+            <input asp-for="Id" class="form-control" placeholder="ID" disabled="disabled" />
+            <span asp-validation-for="Id" class="text-danger"></span>
+        </div>
         <div class="col-lg-8 col-sm-12 mb-2">
             <label asp-for="Nome" class="control-label"></label>
             <input asp-for="Nome" class="form-control" placeholder="Nome do publicador" />
             <span asp-validation-for="Nome" class="text-danger"></span>
         </div>
-        <div class="col-lg-2 col-sm-2 mb-2">
-            <label asp-for="Status" class="control-label"></label>
-            <select asp-for="Status" class="form-select" asp-items="@Html.GetEnumSelectList<StatusPublicador>()"></select>
-            <span asp-validation-for="Status" class="text-danger"></span>
+        <div class="col-lg-3 col-sm-4 mb-2">
+            <label asp-for="Celular" class="control-label"></label>
+            <input asp-for="Celular" class="form-control phone" type="tel" placeholder="(00) 0.0000-0000" />
+            <span asp-validation-for="Celular" class="text-danger"></span>
         </div>
-        <div class="col-lg-2 col-sm-3 mb-2">
-            <label asp-for="Privilegio" class="control-label"></label>
-            <select asp-for="Privilegio" class="form-select" asp-items="@Html.GetEnumSelectList<Privilegio>()"></select>
-            <span asp-validation-for="Privilegio" class="text-danger"></span>
+        <div class="col-lg-2 col-sm-2 mb-2">
+            <label asp-for="isCelularValido" class="control-label"></label>
+            <input asp-for="isCelularValido" class="form-check" type="checkbox" disabled="disabled" />
+            <span asp-validation-for="isCelularValido" class="text-danger"></span>
         </div>
         <div class="col-lg-2 col-sm-3 mb-2">
             <label asp-for="Sexo" class="control-label"></label>
@@ -31,6 +35,16 @@
                 <option value="F">Feminino</option>
             </select>
             <span asp-validation-for="Sexo" class="text-danger"></span>
+        </div>
+        <div class="col-lg-2 col-sm-2 mb-2">
+            <label asp-for="Status" class="control-label"></label>
+            <select asp-for="Status" class="form-select" asp-items="@Html.GetEnumSelectList<EnumStatusPublicador>()"></select>
+            <span asp-validation-for="Status" class="text-danger"></span>
+        </div>
+        <div class="col-lg-4 col-sm-6 mb-2">
+            <label class="form-check-label" asp-for="PublicadorPrivilegios"></label>
+            <select asp-for="Privilegios" id="PublicadorPrivilegios" class="form-select" asp-items="@Html.GetEnumSelectList<EnumPrivilegio>()" multiple="multiple"></select>
+            <span asp-validation-for="Privilegios" class="text-danger"></span>
         </div>
         <div class="col-lg-2 col-sm-2 mb-2">
             <label asp-for="EMenorIdade" class="control-label"></label>
@@ -53,11 +67,11 @@
         </div>
         <div class="col-lg-4 col-sm-7 mb-2">
             <label asp-for="Observacao" class="control-label"></label>
-            <textarea asp-for="Observacao" class="form-control" rows="4"></textarea>
+            <textarea asp-for="Observacao" class="form-control" rows="1"></textarea>
             <span asp-validation-for="Observacao" class="text-danger"></span>
         </div>
     </div>
-    <div class="row col-lg-6 col-sm-12 float-start">
+    <div class="row col-lg-6 col-sm-12 float-start mt-4">
         <div class="float-start">
             <button type="submit" value="Salvar" class="btn btn-success m-2">
                 <i class="bi bi-floppy2"></i>
@@ -75,7 +89,7 @@
     </div>
 </form>
 <form asp-action="Pesquisa">
-    <div class="row col-lg-6 col-sm-12">
+    <div class="row col-lg-6 col-sm-12 mt-4">
         <div class="float-end">
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                 <button type="submit" name="btnPesquisar" class="btn btn-secondary col-lg-4 col-sm-6 m-2">
@@ -94,3 +108,6 @@
     }
 }
 
+<script>
+    
+</script>

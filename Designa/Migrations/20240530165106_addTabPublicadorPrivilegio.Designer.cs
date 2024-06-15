@@ -3,6 +3,7 @@ using System;
 using Designa.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,12 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Designa.Migrations
 {
     [DbContext(typeof(DesignaContext))]
-    partial class DesignaContextModelSnapshot : ModelSnapshot
+    [Migration("20240530165106_addTabPublicadorPrivilegio")]
+    partial class addTabPublicadorPrivilegio
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.6");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.4");
 
             modelBuilder.Entity("Designa.Models.ListaNegra", b =>
                 {
@@ -85,11 +88,6 @@ namespace Designa.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Celular")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("EMenorIdade")
                         .HasColumnType("INTEGER");
 
@@ -112,9 +110,6 @@ namespace Designa.Migrations
                         .HasColumnType("char(1)");
 
                     b.Property<int>("Status")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("isCelularValido")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -172,7 +167,7 @@ namespace Designa.Migrations
 
                     b.HasIndex("PublicadorId");
 
-                    b.ToTable("PublicadorPrivilegios");
+                    b.ToTable("PublicadorPrivilegio");
                 });
 
             modelBuilder.Entity("Designa.Models.Reuniao", b =>
@@ -277,7 +272,7 @@ namespace Designa.Migrations
             modelBuilder.Entity("Designa.Models.PublicadorPrivilegio", b =>
                 {
                     b.HasOne("Designa.Models.Publicador", "Publicador")
-                        .WithMany("PublicadorPrivilegios")
+                        .WithMany("PublicadorPrivilegio")
                         .HasForeignKey("PublicadorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -311,7 +306,7 @@ namespace Designa.Migrations
 
                     b.Navigation("PartesPublicadorAjudante");
 
-                    b.Navigation("PublicadorPrivilegios");
+                    b.Navigation("PublicadorPrivilegio");
 
                     b.Navigation("listaNegraPublicadores");
                 });

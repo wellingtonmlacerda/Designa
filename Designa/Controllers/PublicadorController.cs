@@ -1,29 +1,34 @@
-﻿using Designa.DAL;
-using Designa.Models;
+﻿using Designa.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Packaging;
+using System;
 using X.PagedList;
+using static Designa.Helpers.Enums;
 
 namespace Designa.Controllers
 {
     public class PublicadorController : Controller
     {
         private readonly IGenericRepository<Publicador> _publicador;
+        private readonly IGenericRepository<PublicadorPrivilegio> _publicadorPrivilegio;
         private readonly IConfiguration _configuracao;
         private readonly int _itensToPage;
-        public PublicadorController(IGenericRepository<Publicador> publicador, IConfiguration configuracao)
+        public PublicadorController(IGenericRepository<Publicador> publicador, IConfiguration configuracao, IGenericRepository<PublicadorPrivilegio> publicadorPrivilegio)
         {
             _publicador = publicador;
             _configuracao = configuracao;
             int.TryParse(configuracao["ItensToPage"], out _itensToPage);
             _itensToPage = _itensToPage == 0 ? 15 : _itensToPage;
+            _publicadorPrivilegio = publicadorPrivilegio;
         }
         public async Task<IActionResult> Index(int? pagina)
         {
             int numeroPagina = pagina ?? 1;
             await CarregaPaisAsync();
-            var publicador = await _publicador.GetAllWithIncludes(p => p.Include(x => x.Pai).Include(y => y.Mae));
+            var publicador = await _publicador.GetAllWithIncludes(p => p.Include(x => x.Pai).Include(y => y.Mae).Include(p => p.PublicadorPrivilegios));
+
             return View(publicador.OrderBy(o => o.Nome).ToPagedList(numeroPagina, _itensToPage));
         }
         [HttpPost]
@@ -56,8 +61,14 @@ namespace Designa.Controllers
 
                 if (id != 0)
                 {
-                    if (await _publicador.GetIdWithIncludesAsync(id, p => p.Include(x => x.Pai).Include(y => y.Mae)) is Publicador publicador)
+                    if (await _publicador.GetIdWithIncludesAsync(id, p => p.Include(x => x.Pai).Include(y => y.Mae).Include(pri => pri.PublicadorPrivilegios)) is Publicador publicador)
+                    {
+                        foreach (var item in publicador.PublicadorPrivilegios)
+                        {
+                            publicador.Privilegios.Add(item.Privilegio);
+                        }
                         return PartialView("_Edit", publicador);
+                    }
                 }
 
                 return RedirectToAction(nameof(Index));
@@ -68,6 +79,8 @@ namespace Designa.Controllers
                 return RedirectToAction(nameof(Index));
             }
         }
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Update(Publicador publicador)
@@ -78,11 +91,33 @@ namespace Designa.Controllers
 
                 if (publicador.Id != 0 && ModelState.IsValid)
                 {
+                    if (await _publicadorPrivilegio.GetListAsync(x => x.PublicadorId == publicador.Id) 
+                        is IEnumerable<PublicadorPrivilegio> publicadorPrivilegio)
+                    {
+                        var publicadorPrivilegioBanco = publicadorPrivilegio.ToList();
+                        foreach (var privilegio in publicador.Privilegios.Where(x => !publicadorPrivilegioBanco.Any(y => y.Privilegio == x)))
+                        {
+                            _publicadorPrivilegio.Add(new PublicadorPrivilegio() { Privilegio = privilegio, PublicadorId = publicador.Id });
+                            await _publicadorPrivilegio.SaveAsync();
+                        }
+
+
+                        var removePrivilegio = _publicadorPrivilegio.CreateNewObjectList();
+                        foreach (var item in publicadorPrivilegioBanco.Where(x => !publicador.Privilegios.Any(y => y == x.Privilegio)))
+                        {
+                            removePrivilegio.Add(item);
+                        }
+                        
+                        removePrivilegio.ForEach(x => { 
+                            _publicadorPrivilegio.RemoveAsync(x);  
+                            publicador.PublicadorPrivilegios.Remove(x);
+                        });
+
+                    }
                     await _publicador.UpdateAsync(publicador);
                     TempData["ErrorMessage"] = "Registro atualizado com sucesso!";
-                    return RedirectToAction(nameof(Index));
                 }
-                return View(publicador);
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {

@@ -1,11 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using Designa.Helpers;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using static Designa.Helpers.Enums;
 
 namespace Designa.Models
 {
-    public class Publicador
+    public class PublicadorDTO
     {
         [Key]
         public int Id { get; set; }
@@ -29,21 +32,19 @@ namespace Designa.Models
         [Display(Name = "Mãe")]
         public int? MaeId { get; set; }
         [ForeignKey("PaiId")]
-        public virtual Publicador? Pai { get; set; }
+        public virtual PublicadorDTO? Pai { get; set; }
         [ForeignKey("MaeId")]
-        public virtual Publicador? Mae { get; set; }
+        public virtual PublicadorDTO? Mae { get; set; }
         [Display(Name = "Privilégios")]
         [InverseProperty("Publicador")]
-        //[JsonIgnore] //Essa propriedade ajuda a resolver o erro "A possible object cycle was detected."
-
-        public virtual ICollection<PublicadorPrivilegio> PublicadorPrivilegios { get; set; } = new List<PublicadorPrivilegio>();
+         public virtual ICollection<PublicadorPrivilegioDTO> PublicadorPrivilegios { get; set; } = new List<PublicadorPrivilegioDTO>();
         [NotMapped]
         public virtual List<EnumPrivilegio> Privilegios { get; set;} = new List<EnumPrivilegio>();
         [InverseProperty("Publicador")]
-        public virtual ICollection<ListaNegra> listaNegraPublicadores { get; set; } = new List<ListaNegra>();
+        public virtual ICollection<ListaNegraDTO> listaNegraPublicadores { get; set; } = new List<ListaNegraDTO>();
         [InverseProperty("Publicador")]
-        public virtual ICollection<PublicadorParte> PartesPublicador { get; set; } = new HashSet<PublicadorParte>();
+        public virtual ICollection<PublicadorParteDTO> PartesPublicador { get; set; } = new HashSet<PublicadorParteDTO>();
         [InverseProperty("PublicadorAjudante")]
-        public virtual ICollection<PublicadorParte> PartesPublicadorAjudante { get; set; } = new HashSet<PublicadorParte>();
+        public virtual ICollection<PublicadorParteDTO> PartesPublicadorAjudante { get; set; } = new HashSet<PublicadorParteDTO>();
     }
 }

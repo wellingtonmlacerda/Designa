@@ -1,7 +1,4 @@
-﻿using Designa.DAL;
-using Designa.Data;
-using Designa.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Designa.Models;
 
 namespace Designa.Extensions
 {
@@ -11,8 +8,13 @@ namespace Designa.Extensions
         {
             services.AddScoped<IPublicacao, Publicacao>();
             services.AddScoped<IReuniaoFactory, ReuniaoFactory>();
-            services.AddScoped<PublicadorReuniaoViewModel>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            //services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddControllers()
+                        .AddJsonOptions(options =>
+                        {
+                            options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+                        });
 
             return services;
         }

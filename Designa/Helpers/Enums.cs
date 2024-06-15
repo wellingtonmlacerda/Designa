@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Designa.Helpers
 {
     public class Enums
     {
-        public enum StatusPublicador
+        public enum EnumStatusPublicador
         {
             Inativo,
             Ativo,
@@ -16,19 +17,19 @@ namespace Designa.Helpers
             Não,
             Sim
         }
-        public enum Privilegio
+        public enum EnumPrivilegio
         {
-            [Description("Publicador")]
+            [Display(Name ="Publicador")]
             Publicador,
-            [Description("Pioneiro Auxiliar")]
+            [Display(Name = "Pioneiro Auxiliar")]
             PioneiroAuxiliar,
-            [Description("Pioneiro")]
+            [Display(Name = "Pioneiro")]
             Pioneiro,
-            [Description("Pioneiro Especial")]
+            [Display(Name = "Pioneiro Especial")]
             PioneiroEspecial,
-            [Description("Ancião")]
+            [Display(Name = "Ancião")]
             Anciao,
-            [Description("Servo Ministerial")]
+            [Display(Name = "Servo Ministerial")]
             ServoMinisterial
         }
     }

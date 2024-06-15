@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
-namespace Designa.DAL
+namespace Designa.Models
 {
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {
@@ -15,14 +15,19 @@ namespace Designa.DAL
             _context = context;
             _dbSet = _context.Set<TEntity>();
         }
-        public TEntity CreateNew()
+        public TEntity CreateNewObject()
         {
-            var teste = Activator.CreateInstance<TEntity>();
-            return teste;
+            var newInstance = Activator.CreateInstance<TEntity>();
+            return newInstance;
+        }
+        public List<TEntity> CreateNewObjectList()
+        {
+            var newInstance = Activator.CreateInstance<List<TEntity>>();
+            return newInstance;
         }
         public void Add(TEntity model)
         {
-            _dbSet.Add(model);
+           _dbSet.Add(model);
         }
         public void AddRange(IEnumerable<TEntity> model)
         {
@@ -46,28 +51,28 @@ namespace Designa.DAL
         }
         public TEntity Get(Expression<Func<TEntity, bool>> predicate)
         {
-            return _dbSet.FirstOrDefault(predicate) ?? CreateNew();
+            return _dbSet.FirstOrDefault(predicate) ?? CreateNewObject();
         }
         public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await _dbSet.FirstOrDefaultAsync(predicate) ?? CreateNew();
+            return await _dbSet.FirstOrDefaultAsync(predicate) ?? CreateNewObject();
         }
         public IEnumerable<TEntity> GetList(Expression<Func<TEntity, bool>> predicate)
         {
-            return _dbSet.Where<TEntity>(predicate).ToList();
+            return _dbSet.Where(predicate).ToList();
         }
         public async Task<IEnumerable<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await Task.Run(() => _dbSet.Where<TEntity>(predicate));
+            return await Task.Run(() => _dbSet.Where(predicate));
         }
         public async Task<IEnumerable<TEntity>> GetListWithIncludesAsync(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object?>> include)
         {
             IQueryable<TEntity> query = _dbSet;
-            
+
             if (include != null)
                 query = include(query);
 
-            return await Task.Run(() => query.Where<TEntity>(predicate));
+            return await Task.Run(() => query.Where(predicate));
         }
         public async Task<IEnumerable<TEntity>> GetAllWithIncludes(Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object?>> include)
         {

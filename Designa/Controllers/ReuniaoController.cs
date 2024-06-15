@@ -1,4 +1,4 @@
-﻿using Designa.DAL;
+﻿using AutoMapper;
 using Designa.Data;
 using Designa.Models;
 using Microsoft.AspNetCore.Http;
@@ -28,7 +28,7 @@ namespace Designa.Controllers
             IGenericRepository<Publicador> publicador,
             IGenericRepository<PublicadorParte> publicadorParte,
             IGenericRepository<Parte> parte
-
+            //IMapper mapper
         )
         {
             _publicacao = publicacao;
@@ -45,19 +45,22 @@ namespace Designa.Controllers
             await AtualizaBanco(issue);
 
             var reunioes = await _reuniao.GetListWithIncludesAsync(x => x.Issue == _publicacao.RetonaPubEmissao(issue),
-                                                                   p => p.Include(i => i.Partes).ThenInclude(t => t.PublicadorParte!.Publicador)
-                                                                        .Include(t => t.Partes).ThenInclude(y => y.PublicadorParte!.PublicadorAjudante)
+                                                                   p => p.Include(i => i.Partes).ThenInclude(t => t.PublicadorParte).ThenInclude(f => f!.Publicador)
+                                                                        .Include(t => t.Partes).ThenInclude(y => y.PublicadorParte).ThenInclude(f => f!.PublicadorAjudante)
                                                                         .Include(pre => pre.Presidente)
                                                                         .Include(r => r.PublicadorOracao));
 
-            var publicadores = _publicador.GetList(x => x.Status == StatusPublicador.Ativo).ToList();
+            var publicadores = await _publicador.GetListWithIncludesAsync(x => x.Status == EnumStatusPublicador.Ativo, y => y.Include(i => i.PublicadorPrivilegios));
 
-            ViewBag.Presidentes = publicadores.Where(x => x.Sexo.Contains("M") && x.Privilegio == Privilegio.Anciao);
+            publicadores = publicadores.ToList();
+
+            ViewBag.Presidentes = publicadores.Where(x => x.Sexo.Contains("M") && x.PublicadorPrivilegios!.Any(y => y.Privilegio == EnumPrivilegio.Anciao));
             ViewBag.PublicadorOracao = publicadores.Where(x => x.Sexo.Contains("M"));
             ViewBag.Publicadores = publicadores;
 
             return View(await reunioes.ToPagedListAsync(numeroPagina, reunioes.Count()));
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(List<Reuniao> reuniaos)
@@ -89,6 +92,7 @@ namespace Designa.Controllers
                         }
                     }
                     await _reuniao.UpdateAsync(reuniao);
+                    TempData["ErrorMessage"] = "Registro salvo com sucesso!";
                 }
                 return RedirectToAction(nameof(Index));
             }
