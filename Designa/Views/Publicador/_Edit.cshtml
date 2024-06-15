@@ -20,7 +20,7 @@
         </div>
         <div class="col-lg-3 col-sm-4 mb-2">
             <label asp-for="Celular" class="control-label"></label>
-            <input asp-for="Celular" class="form-control phone" type="tel" placeholder="(00) 0.0000-0000" />
+            <input asp-for="Celular" class="form-control phone" placeholder="(00) 0.0000-0000" />
             <span asp-validation-for="Celular" class="text-danger"></span>
         </div>
         <div class="col-lg-2 col-sm-2 mb-2">
@@ -107,7 +107,3 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
-
-<script>
-    
-</script>

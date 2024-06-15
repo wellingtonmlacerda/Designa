@@ -76,11 +76,12 @@ namespace Designa.Controllers
                     {
                         if (parte.PublicadorParte is PublicadorParte publicadorParte && publicadorParte.PublicadorId != 0)
                         {
+                            publicadorParte.ParteId = parte.Id;
+
                             if (publicadorParte.PublicadorId != 0)
                             {
                                 if (parte.PublicadorParteId == 0)
                                 {
-                                    publicadorParte.ParteId = parte.Id;
                                     _publicadorParte.Add(publicadorParte);
                                     await _publicadorParte.SaveAsync();
                                 }

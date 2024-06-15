@@ -9,7 +9,6 @@ namespace Designa.Extensions
             services.AddScoped<IPublicacao, Publicacao>();
             services.AddScoped<IReuniaoFactory, ReuniaoFactory>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            //services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddControllers()
                         .AddJsonOptions(options =>
                         {

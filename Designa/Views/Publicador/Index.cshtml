@@ -43,7 +43,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr onclick="editar(@item.Id)">
+            <tr onclick="editar(@item.Id);">
                 <th><i class="bi bi-pencil-square" title="Editar registro"></i></th>
                 <td>
                     @Html.DisplayFor(modelItem => item.Id)
@@ -94,9 +94,11 @@
             dataType: "text",
             success: function (data) {
                 $('#myPartialContainer').html(data);
+                reloadMasks();
             },
             error: function (req, status, error) {
                 console.log(error);
+                reloadMasks();
             }
         });
     }

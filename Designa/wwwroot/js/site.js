@@ -89,6 +89,8 @@ $(function () {
             $(this).addClass('active');
         }
     });
+
+    reloadMasks();
 });
 
 function imprimirCards() {
@@ -101,3 +103,6 @@ function imprimirCards() {
     document.documentElement.setAttribute('data-bs-theme', getStoredTheme())
 }
 
+reloadMasks = function () {
+    $(".phone").inputmask("(99) 9.9999-9999");
+}
