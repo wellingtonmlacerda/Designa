@@ -3,6 +3,7 @@ using System;
 using Designa.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Designa.Migrations
 {
     [DbContext(typeof(DesignaContext))]
-    partial class DesignaContextModelSnapshot : ModelSnapshot
+    [Migration("20240616160410_AlterTbPublicadorCell")]
+    partial class AlterTbPublicadorCell
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.6");

@@ -18,9 +18,9 @@ namespace Designa.Models
         [Column(TypeName = "char(1)")]
         public string Sexo { get; set; } = string.Empty;
         [MaxLength(20)]
-        public string Celular { get; set; } = string.Empty;
+        public string? Celular { get; set; }
         [Display(Name = "Celular Valido?")]
-        public bool isCelularValido { get; set; }
+        public bool isCelularValido { get; set; } = false;
         public string SexoDesc { get { return Sexo == "M" ? "Masculino" : "Feminino"; } }
         [Required, Display(Name = "É Menor?")]
         public EnumBoleano EMenorIdade { get; set; } = EnumBoleano.Não;

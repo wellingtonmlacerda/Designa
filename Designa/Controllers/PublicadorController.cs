@@ -101,7 +101,6 @@ namespace Designa.Controllers
                             await _publicadorPrivilegio.SaveAsync();
                         }
 
-
                         var removePrivilegio = _publicadorPrivilegio.CreateNewObjectList();
                         foreach (var item in publicadorPrivilegioBanco.Where(x => !publicador.Privilegios.Any(y => y == x.Privilegio)))
                         {
