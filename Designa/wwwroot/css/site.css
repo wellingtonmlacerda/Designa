@@ -178,4 +178,22 @@ html[data-bs-theme="dark"] {
     .collapse {
         display: block !important;
     }
+
+    .input-ajudante input:placeholder-shown {
+        display: none;
+    }
+
+    /* Ocultar a div pai */
+    .input-ajudante input:placeholder-shown {
+        display: none;
+    }
+
+        .input-ajudante input:placeholder-shown ~ .input-ajudante {
+            display: none;
+        }
+
+    /*::-webkit-input-placeholder {*/
+        /* WebKit browsers */
+        /*visibility: hidden;
+    }*/
 }

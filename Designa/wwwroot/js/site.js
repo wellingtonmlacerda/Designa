@@ -106,3 +106,4 @@ function imprimirCards() {
 reloadMasks = function () {
     $(".phone").inputmask("(99) 9.9999-9999");
 }
+

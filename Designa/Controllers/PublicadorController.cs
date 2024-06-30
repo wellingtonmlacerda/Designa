@@ -39,11 +39,26 @@ namespace Designa.Controllers
             {
                 await CarregaPaisAsync();
 
-                if (ModelState.IsValid)
+                if (ModelState.IsValid && publicador.Id == 0)
                 {
                     _publicador.Add(publicador);
                     await _publicador.SaveAsync();
+
+                    if (await _publicadorPrivilegio.GetListAsync(x => x.PublicadorId == publicador.Id)
+                        is IEnumerable<PublicadorPrivilegio> publicadorPrivilegio)
+                    {
+                        var publicadorPrivilegioBanco = publicadorPrivilegio.ToList();
+                        foreach (var privilegio in publicador.Privilegios.Where(x => !publicadorPrivilegioBanco.Any(y => y.Privilegio == x)))
+                        {
+                            _publicadorPrivilegio.Add(new PublicadorPrivilegio() { Privilegio = privilegio, PublicadorId = publicador.Id });
+                            await _publicadorPrivilegio.SaveAsync();
+                        }
+                    }
                     TempData["ErrorMessage"] = "Registro salvo com sucesso!";
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "O publicador(a) já estava cadastrado(a)!";
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -144,7 +159,7 @@ namespace Designa.Controllers
             try
             {
                 ViewBag.Nome = Nome;
-                var publicador = await _publicador.GetListAsync(x => x.Nome.ToUpper().Contains(Nome.Trim().ToUpper()));
+                var publicador = await _publicador.GetListWithIncludesAsync(g => g.Nome.ToUpper().Contains(Nome.Trim().ToUpper()), p => p.Include(x => x.Pai).Include(y => y.Mae).Include(p => p.PublicadorPrivilegios));
                 if (publicador.Count() > 0)
                 {
                     return View("Index", publicador.OrderBy(o => o.Nome).ToPagedList(1, _itensToPage));

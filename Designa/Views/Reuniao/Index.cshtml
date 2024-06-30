@@ -37,7 +37,7 @@
                                 <input type="hidden" asp-for="@Model[contReuniao].Id" />
                                 <input type="hidden" asp-for="@Model[contReuniao].Issue" />
                                 <input type="hidden" asp-for="@Model[contReuniao].Semana" />
-                                <h3>Semana de @Html.DisplayFor(modelItem => reuniao.Semana)</h3>
+                                <h2>Semana de @Html.DisplayFor(modelItem => reuniao.Semana)</h2>
                             </a>
                         </div>
                         <div class="col-1">
@@ -76,20 +76,31 @@
                                 @if (parte.Numero == 0 && cont == 1)
                                 {
                                     <div class="icon-gema float-sm-start me-3 mb-2"></div>
+                                    <h1 class="txt-color-teal">
+                                        @($" {parte.Titulo}")
+                                    </h1>
                                 }
                                 else if (parte.Numero == 0 && cont == 2)
                                 {
                                     <div class="icon-cevada float-sm-start me-3 mb-2"></div>
+                                    <h1 class="txt-color-gold">
+                                        @($" {parte.Titulo}")
+                                    </h1>
                                 }
                                 else if (parte.Numero == 0 && cont == 3)
                                 {
                                     <div class="icon-ovelha float-sm-start me-3 mb-2"></div>
+                                    <h1 class="txt-color-maroon">
+                                        @($" {parte.Titulo}")
+                                    </h1>
                                 }
-                                <h4 class="@(cont == 1 ? "txt-color-teal" : cont == 2  ? "txt-color-gold" : "txt-color-maroon")">
-                                    @(parte.Numero != 0 ? $"{parte.Numero}." : "")
-                                    @parte.Titulo
-                                    @(parte.Numero != 0 ? $"({parte.Minutos} min)" : "")
-                                </h4>
+
+                                @if (parte.Numero != 0)
+                                {
+                                    <h4 class="@(cont == 1 ? "txt-color-teal" : cont == 2  ? "txt-color-gold" : "txt-color-maroon")">
+                                        @($"{parte.Numero}. {parte.Titulo} ({parte.Minutos} min)")
+                                    </h4>
+                                }
                             </div>
                             @if (parte.Numero != 0)
                             {
@@ -100,7 +111,7 @@
                                 </div>
                                 @if (cont == 2 || reuniao.Partes.LastOrDefault()?.Numero == parte.Numero)
                                 {
-                                    <div class="col-3">
+                                    <div class="col-3 input-ajudante">
                                         <input type="hidden" name="[@contReuniao].Partes[@contPartes].PublicadorParte.PublicadorAjudanteId" 
                                             id="publicadorAjudante_@contReuniao-@contPartes" value="@parte.PublicadorParte?.PublicadorAjudanteId" />
                                         <input type="text" value="@parte.PublicadorParte?.PublicadorAjudante?.Nome" placeholder="Ajudante"
