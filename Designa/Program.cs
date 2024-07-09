@@ -16,9 +16,6 @@ builder.Services.AddLocalization();
 
 var app = builder.Build();
 
-//Register Syncfusion license
-Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(builder.Configuration["SyncfusionLicense"]);
-
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
