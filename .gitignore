@@ -9,7 +9,7 @@
 *.user
 *.userosscache
 *.sln.docstates
-appsettings.json
+/Designa/appsettings.json
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -410,4 +410,3 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-/Designa/appsettings.json
