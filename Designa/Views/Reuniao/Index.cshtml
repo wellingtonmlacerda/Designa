@@ -37,15 +37,14 @@
                                 <input type="hidden" asp-for="@Model[contReuniao].Id" />
                                 <input type="hidden" asp-for="@Model[contReuniao].Issue" />
                                 <input type="hidden" asp-for="@Model[contReuniao].Semana" />
-                                <h2>Semana de @Html.DisplayFor(modelItem => reuniao.Semana)</h2>
+                                <h1>Semana de @Html.DisplayFor(modelItem => reuniao.Semana)</h1>
                             </a>
                         </div>
-                        <div class="col-1">
-                            <label for="presidenteNome-@contReuniao" class="form-label">Presidente:</label>
-                        </div>
-                        <div class="col-3">
+                        <div class="col-4 text-center">
+                            <h1><label for="presidenteNome-@contReuniao" class="form-label">Presidente </label>
                             <input type="hidden" asp-for="@Model[contReuniao].PresidenteId" id="presidenteId-@contReuniao" value="@reuniao.PresidenteId" />
                             <input type="text" asp-for="@Model[contReuniao].Presidente!.Nome" id="presidenteNome-@contReuniao" class="form-control text-center presidente-autocomplete" />
+                            </h1>
                         </div>
                     </div>
                 </div>
@@ -72,7 +71,7 @@
                             cont++;
 
                         <div class="row mb-4 justify-content-between">
-                            <div class="col-6 @(parte.Numero == 0 ? "mt-5" : "")">
+                            <div class="col @(parte.Numero == 0 ? "mt-5" : "")">
                                 @if (parte.Numero == 0 && cont == 1)
                                 {
                                     <div class="icon-gema float-sm-start me-3 mb-2"></div>
@@ -104,7 +103,7 @@
                             </div>
                             @if (parte.Numero != 0)
                             {
-                                <div class="col-3 align-items-end">
+                                <div class="col-3 align-items-end input-publicador">
                                     <input type="hidden" name="[@contReuniao].Partes[@contPartes].PublicadorParte.PublicadorId" id="publicadorId_@contReuniao-@contPartes" value="@parte.PublicadorParte?.PublicadorId" />
                                     <input type="text" value="@parte.PublicadorParte?.Publicador?.Nome" placeholder="Publicador"
                                         id="publicadorNome_@contReuniao-@contPartes" class="form-control text-center buscaPublicador" />

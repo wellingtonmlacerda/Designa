@@ -1,3 +1,4 @@
+using Aspose.Words;
 using Newtonsoft.Json;
 using SautinSoft;
 using System.Net;
@@ -65,10 +66,123 @@ namespace Designa.Models
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             string stringResponse = await response.Content.ReadAsStringAsync();
+            //var jsonObjetc = rtfToJson(stringResponse);
             var objeto = JsonConvert.DeserializeObject<Publicacao>(stringResponse);
 
             return (objeto ?? new Publicacao());
         }
+
+        public string rtfToJson(string rtf)
+        {
+
+            // Converter a string RTF em um Stream
+            using (MemoryStream stream = new MemoryStream())
+            {
+                StreamWriter writer = new StreamWriter(stream);
+                writer.Write(rtf);
+                writer.Flush();
+                stream.Position = 0;
+
+                // Carregar o documento a partir do stream
+                Document doc = new Document(stream);
+
+                // Extrair texto completo
+                string fullText = doc.GetText();
+
+                // Função para limpar o texto de partes irrelevantes
+                string CleanText(string text)
+                {
+                    // Exemplo simples de remoção de URLs e outras partes irrelevantes
+                    text = Regex.Replace(text, @"https?:\/\/\S+", ""); // Remove URLs
+                    text = Regex.Replace(text, @"Created with an evaluation copy.*", "", RegexOptions.Singleline); // Remove mensagens da avaliação Aspose
+                    text = Regex.Replace(text, @"\{[^}]+\}", ""); // Remove conteúdo entre chaves
+
+                    // Outras limpezas específicas que forem necessárias
+                    // Por exemplo: remover cabeçalhos, rodapés, etc.
+
+                    return text.Trim();
+                }
+
+                // Limpar o texto
+                fullText = CleanText(fullText);
+
+                // Padrões regex para identificar seções e partes
+                string secaoPattern = @"^[A-Za-z\s]+$";
+                string partePattern = @"^(\d+)\.\s+(.*?)(\((\d+)\s+min\))?$";
+
+                List<object> secoes = new List<object>();
+                string[] lines = fullText.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+                int secaoId = 1;
+                string currentSecao = null;
+                List<object> partes = new List<object>();
+
+                foreach (var line in lines)
+                {
+                    // Verifica se a linha é uma seção
+                    if (Regex.IsMatch(line.Trim(), secaoPattern))
+                    {
+                        // Salva a seção anterior
+                        if (currentSecao != null)
+                        {
+                            secoes.Add(new
+                            {
+                                id = secaoId++,
+                                secao = currentSecao,
+                                partes = partes
+                            });
+                        }
+
+                        // Inicia uma nova seção
+                        currentSecao = line.Trim();
+                        partes = new List<object>();
+                    }
+                    else if (Regex.IsMatch(line.Trim(), partePattern))
+                    {
+                        // Extrai informações da parte
+                        var match = Regex.Match(line.Trim(), partePattern);
+                        int numero = int.Parse(match.Groups[1].Value);
+                        string titulo = match.Groups[2].Value.Trim();
+                        int tempo = match.Groups[4].Success ? int.Parse(match.Groups[4].Value) : 0;
+                        string texto = ""; // Placeholder para o texto associado
+
+                        // Busca o texto associado à parte
+                        if (line.Contains("min"))
+                        {
+                            int index = Array.IndexOf(lines, line) + 1;
+                            if (index < lines.Length && !Regex.IsMatch(lines[index], secaoPattern))
+                            {
+                                texto = lines[index].Trim();
+                            }
+                        }
+
+                        partes.Add(new
+                        {
+                            numero = numero,
+                            titulo = titulo,
+                            texto = texto,
+                            tempo = tempo
+                        });
+                    }
+                }
+
+                // Adiciona a última seção
+                if (currentSecao != null)
+                {
+                    secoes.Add(new
+                    {
+                        id = secaoId++,
+                        secao = currentSecao,
+                        partes = partes
+                    });
+                }
+
+                // Serializar para JSON
+                string jsonString = JsonConvert.SerializeObject(secoes, Formatting.Indented);
+                return jsonString;
+            }
+        }
+
         /// <summary>
         /// Retorna o período da Nossa Vida e Ministério Cristão no formato para a requisição.
         /// Use 0 para o período atual, 1 para o próximo, 2 para o seguinte e etc.

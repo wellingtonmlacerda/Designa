@@ -80,7 +80,7 @@ namespace Designa.Controllers
 
                             if (publicadorParte.PublicadorId != 0)
                             {
-                                if (parte.PublicadorParteId == 0)
+                                if (parte.PublicadorParteId == 0 || parte.PublicadorParteId == null)
                                 {
                                     _publicadorParte.Add(publicadorParte);
                                     await _publicadorParte.SaveAsync();

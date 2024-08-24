@@ -133,6 +133,9 @@ html[data-bs-theme="dark"] {
     font-size: 14px; /* Tamanho da fonte */
     color: inherit; /* Cor do texto */
 }
+.form-control {
+    font-size: 16px;
+}
 
 @media print {
     @page {
@@ -179,18 +182,11 @@ html[data-bs-theme="dark"] {
         display: block !important;
     }
 
+        /* Ocultar a div pai */
     .input-ajudante input:placeholder-shown {
         display: none;
     }
-
-    /* Ocultar a div pai */
-    .input-ajudante input:placeholder-shown {
-        display: none;
-    }
-
-        .input-ajudante input:placeholder-shown ~ .input-ajudante {
-            display: none;
-        }
+        
 
     /*::-webkit-input-placeholder {*/
         /* WebKit browsers */

@@ -1,0 +1,23 @@
+version: '3.4'
+
+services:
+  designa:
+    image: ${DOCKER_REGISTRY-}designa
+    build:
+      context: .
+      dockerfile: Designa/Dockerfile
+    depends_on:
+      - wppconnect
+    networks:
+      - app-network
+
+  wppconnect:
+    image: wppconnect/server-cli:latest
+    container_name: wppconnect-server-cli
+    command: wppserver --secretKey lacerda@ability2000 --port 8080 --frontend
+    ports:
+      - "8080:8080" # Porta para acessar o frontend do WPPConnect
+
+networks:
+  app-network:
+    driver: bridge

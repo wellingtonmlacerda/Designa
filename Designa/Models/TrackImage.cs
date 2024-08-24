@@ -10,6 +10,6 @@ namespace Designa.Models
         public required string ModifiedDatetime { get; set; }
 
         [JsonProperty("checksum")]
-        public int? Checksum { get; set; }
+        public string Checksum { get; set; } = string.Empty;
     }
 }
