@@ -105,7 +105,7 @@
                             {
                                 <div class="col-3 align-items-end input-publicador">
                                     <input type="hidden" name="[@contReuniao].Partes[@contPartes].PublicadorParte.PublicadorId" id="publicadorId_@contReuniao-@contPartes" value="@parte.PublicadorParte?.PublicadorId" />
-                                    <input type="text" value="@parte.PublicadorParte?.Publicador?.Nome" placeholder="Publicador"
+                                    <input type="text" value="@parte.PublicadorParte?.Publicador?.Nome" placeholder="Publicador" data-sessao="@cont"
                                         id="publicadorNome_@contReuniao-@contPartes" class="form-control text-center buscaPublicador" />
                                 </div>
                                 @if (cont == 2 || reuniao.Partes.LastOrDefault()?.Numero == parte.Numero)
@@ -213,12 +213,28 @@
                 $("ul.ui-menu").width($(this).innerWidth());
                 $(".ui-helper-hidden-accessible").hide();
             },
-            source: publicadores.map(function (p) { return p.nome; }),
+            source: function (request, response) {
+                    var sessao = $(this.element).data('sessao'); // Pega o data-sessao do input
+
+                    // Aqui você pode usar o 'sessao' para filtrar os publicadores ou qualquer outra lógica
+                    var resultados = publicadores
+                        .filter(function(p) {
+                           if (sessao != 2) {
+                                return p.sexo === 'M' && p.nome.toLowerCase().includes(request.term.toLowerCase());
+                            }
+                            return p.nome.toLowerCase().includes(request.term.toLowerCase());
+                        })
+                        .map(function(p) {
+                            return p.nome;
+                        });
+
+                    response(resultados);
+            },
             select: function (event, ui) {
                 var publicadorSelecionado = publicadores.find(function (p) {
                     return p.nome === ui.item.value;
                 });
-                
+
                 // Obter o índice do elemento
                 var indices = $(this).attr('id').split('_')[1];
                 var indexReuniao = indices.split('-')[0];
@@ -231,7 +247,7 @@
                 } else {
                     id = 'publicadorAjudante_' + indexReuniao + '-' + indexParte;
                 }
-                
+
                 valor = publicadorSelecionado.id;
 
                 // Adicione o novo campo ao seu contêiner (por exemplo, um formulário)

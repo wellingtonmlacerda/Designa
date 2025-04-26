@@ -1,11 +1,6 @@
-﻿using AutoMapper;
-using Designa.Data;
-using Designa.Models;
-using Microsoft.AspNetCore.Http;
+﻿using Designa.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol;
 using X.PagedList;
 using static Designa.Helpers.Enums;
 
@@ -54,7 +49,7 @@ namespace Designa.Controllers
 
             publicadores = publicadores.ToList();
 
-            ViewBag.Presidentes = publicadores.Where(x => x.Sexo.Contains("M") && x.PublicadorPrivilegios!.Any(y => y.Privilegio == EnumPrivilegio.Anciao));
+            ViewBag.Presidentes = publicadores.Where(x => x.Sexo.Contains("M") && x.PublicadorPrivilegios!.Any(y => y.Privilegio == EnumPrivilegio.Anciao || y.Privilegio == EnumPrivilegio.ServoMinisterial));
             ViewBag.PublicadorOracao = publicadores.Where(x => x.Sexo.Contains("M"));
             ViewBag.Publicadores = publicadores;
 
